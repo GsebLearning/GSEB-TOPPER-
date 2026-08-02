@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="gu" data-theme="light">
+<head>
+<link rel="manifest" href="data:application/json,{"name":"GSEB TOPPER","short_name":"GSEB","start_url":".","display":"standalone","background_color":"#4f46e5","theme_color":"#4f46e5"}"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#4f46e5"/>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>GSEB TOPPER</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+:root{--bg:linear-gradient(165deg,#eef2ff 0%,#fdf2f8 45%,#ecfeff 100%);--surface:#fff;--surface2:#f8fafc;--text:#0f172a;--text2:#64748b;--border:#e2e8f0;--primary:#6366f1;--primary2:#8b5cf6;--accent:#ec4899;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--header:linear-gradient(135deg,#4f46e5,#7c3aed,#db2777);--card-shadow:0 4px 24px rgba(99,102,241,.08);--glass:rgba(255,255,255,.75);--input-bg:#fff}
+[data-theme="dark"]{--bg:linear-gradient(165deg,#0c0a14,#1a1025,#0c1222);--surface:#1e1b2e;--surface2:#16132a;--text:#f1f5f9;--text2:#94a3b8;--border:#2e2a45;--primary:#818cf8;--primary2:#a78bfa;--accent:#f472b6;--success:#34d399;--warning:#fbbf24;--danger:#f87171;--header:linear-gradient(135deg,#312e81,#4c1d95,#9d174d);--card-shadow:0 4px 24px rgba(0,0,0,.45);--glass:rgba(30,27,46,.88);--input-bg:#16132a}
+*{box-sizing:border-box;margin:0;padding:0}html,body{visibility:hidden}html.ready,html.ready body{visibility:visible}
+body{font-family:'Noto Sans Gujarati',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--text)}
+.hidden{display:none!important}.locked .edit-only{display:none!important}
+.btn{padding:8px 16px;border-radius:12px;font-weight:600;font-size:13px;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.btn:active{transform:scale(.96)}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.btn-ghost{background:rgba(255,255,255,.18);color:#fff}.btn-amber{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.btn-red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}.btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.btn-teal{background:linear-gradient(135deg,#14b8a6,#0d9488);color:#fff}.btn-sm{padding:5px 10px;font-size:11px;border-radius:8px}
+.card{background:var(--surface);border-radius:20px;border:1px solid var(--border);box-shadow:var(--card-shadow)}
+.chap-card{cursor:pointer;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:12px;transition:all .2s}
+.chap-card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.answer-box{background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(52,211,153,.08));border-left:4px solid var(--success);padding:12px;border-radius:0 12px 12px 0;margin-top:10px;font-size:13px;color:var(--success)}
+.std-tab{flex:1;padding:14px 8px;text-align:center;font-weight:700;border:none;cursor:pointer;font-size:14px;font-family:inherit;color:rgba(255,255,255,.45);background:transparent}
+.std-tab.active{color:#fff;background:rgba(255,255,255,.14);border-radius:12px 12px 0 0}
+.sub-pill{padding:9px 14px;border-radius:999px;font-weight:600;font-size:12px;border:none;cursor:pointer;font-family:inherit}
+.sub-pill.active{color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.2)}.sub-pill:not(.active){background:var(--surface2);color:var(--text2)}
+.test-option{border:1.5px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:8px;cursor:pointer;background:var(--surface);font-size:14px}
+.test-option.selected{background:rgba(99,102,241,.14);border-color:var(--primary);font-weight:600}
+.test-option.correct{background:rgba(16,185,129,.15)!important;border-color:var(--success)!important}
+.test-option.wrong{background:rgba(239,68,68,.12)!important;border-color:var(--danger)!important}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:var(--surface);border-radius:24px;padding:24px;width:100%;max-width:400px;border:1px solid var(--border);max-height:90vh;overflow-y:auto}
+.modal-box input,.modal-box select,.modal-box textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:14px;font-family:inherit;font-size:14px;background:var(--input-bg);color:var(--text);margin-bottom:10px;outline:none}
+.modal-title{font-size:18px;font-weight:700;color:var(--primary);margin-bottom:16px}
+.num-badge{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+.empty-chap{border:2px dashed var(--border);background:var(--surface2);border-radius:20px;padding:32px;text-align:center;color:var(--text2)}
+.theme-btn{width:40px;height:40px;border-radius:12px;border:none;cursor:pointer;font-size:18px;background:rgba(255,255,255,.15);color:#fff}
+.q-card{padding:16px;margin-bottom:12px;border-radius:18px;background:var(--surface);border:1px solid var(--border)}
+.info-banner{padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.06));border:1px solid rgba(245,158,11,.25);margin-bottom:16px;display:flex;gap:10px;font-size:13px;line-height:1.5}
+.header-premium{background:var(--header);color:#fff;position:sticky;top:0;z-index:50;padding:16px;box-shadow:0 8px 32px rgba(79,70,229,.25)}
+.test-banner{padding:24px;border-radius:20px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;text-align:center;margin-bottom:20px}
+.tip-card{padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.2);margin-bottom:14px;font-size:13px;line-height:1.6}
+.mat-card{padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--border);margin-bottom:12px}
+.mat-card h4{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px}
+.mat-card ul{padding-left:18px;font-size:13px;line-height:1.7;color:var(--text2)}
+.score-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(16,185,129,.15);color:var(--success)}
+.filter-chip{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:inherit}
+.filter-chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.fb-correct{color:var(--success);font-weight:700;font-size:13px;margin-top:8px}
+.fb-wrong{color:var(--danger);font-weight:700;font-size:13px;margin-top:8px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.dash-card{padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--border);text-align:center}
+.dash-card .num{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.dash-card .lbl{font-size:11px;color:var(--text2);margin-top:4px;font-weight:600}
+.progress-bar{height:8px;border-radius:999px;background:var(--surface2);overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .5s}
+
+.badge-earned{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--border);font-size:12px;font-weight:600;margin:4px}
+.badge-earned.on{background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(251,191,36,.1));border-color:rgba(245,158,11,.4)}
+.formula-card{padding:14px;border-radius:16px;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.2);margin-bottom:10px}
+.formula-card h4{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.timer-bar{height:6px;border-radius:999px;background:var(--surface2);overflow:hidden;margin:10px 0}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--warning),var(--danger));transition:width .3s}
+.quiz-q{font-size:16px;font-weight:600;line-height:1.5;margin:12px 0}
+.daily-card{padding:14px;border-radius:18px;margin-bottom:12px;border:1px solid var(--border);background:var(--surface)}
+.report-box{padding:16px;border-radius:16px;background:var(--surface2);font-size:13px;line-height:1.7;white-space:pre-wrap}
+.glossary-item{padding:12px;border-bottom:1px solid var(--border)}
+.glossary-item b{color:var(--primary)}
+.vs-score{font-size:28px;font-weight:800;text-align:center}
+
+
+@media print{
+body *{visibility:hidden}
+#dynamicArea,#dynamicArea *,#chapterContent,#chapterContent *,#reportText{visibility:visible}
+#dynamicArea,#chapterContent{position:absolute;left:0;top:0;width:100%}
+.edit-only,.header-premium,.std-tab,.sub-pill,.theme-btn{display:none!important}
+}
+</style>
+</head>
+<body class="locked" id="appBody">
+<div id="mainView">
+<header id="mainHeader" class="header-premium">
+<div style="max-width:640px;margin:0 auto">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div><h1 id="siteTitle" style="font-size:26px;font-weight:800;margin:0">GSEB TOPPER</h1>
+<p id="siteSubtitle" style="font-size:12px;opacity:.85;margin:2px 0 0">ધોરણ 6 • 7 • 8 | અભ્યાસક્રમ આધારિત</p></div>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+<span id="statusBadge" style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:999px;font-size:12px;font-weight:600">🔒 View Only</span>
+<button id="btnLock" class="btn btn-ghost btn-sm hidden" onclick="lockEdit()">🔒 લૉક</button>
+<button id="btnName" class="edit-only btn btn-ghost btn-sm hidden" onclick="openNameModal()">✏️ નામ</button>
+<button id="btnSub" class="edit-only btn btn-ghost btn-sm hidden" onclick="openAddSubject()">➕ વિષય</button>
+</div></div>
+</header>
+<div style="background:var(--header);position:sticky;top:0;z-index:40;padding:0 12px">
+<div style="max-width:640px;margin:0 auto;display:flex;gap:4px">
+<button class="std-tab active" data-std="6">ધોરણ 6</button>
+<button class="std-tab" data-std="7">ધોરણ 7</button>
+<button class="std-tab" data-std="8">ધોરણ 8</button>
+</div></div>
+<div style="background:var(--glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 12px;position:sticky;top:48px;z-index:30">
+<div style="max-width:640px;margin:0 auto;display:flex;gap:6px;justify-content:center;flex-wrap:wrap" id="subTabs"></div>
+</div>
+<main style="max-width:640px;margin:0 auto;padding:18px 14px">
+<div class="info-banner"><span>✨</span><div id="infoBanner">પ્રકરણ ક્લિક → પ્રશ્નો. Edit: હેડર <b>5 વાર ટચ</b>. સાચા જવાબે 🎉</div></div>
+<div id="tipBox" class="tip-card"></div>
+<div id="dashBox"></div>
+<div id="dynamicArea"></div>
+</main>
+<footer style="background:var(--surface2);border-top:1px solid var(--border);text-align:center;padding:28px 16px;margin-top:36px">
+<p id="footerTitle" style="font-weight:800;font-size:16px">GSEB TOPPER</p>
+<p id="footerSub" style="font-size:11px;color:var(--text2);margin-top:4px">GSEB અભ્યાસક્રમ • Teacher Built • 2026</p>
+</footer>
+</div>
+<div id="chapterView" class="hidden">
+<header class="header-premium" style="padding:12px 16px">
+<div style="max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px">
+<button onclick="goHome()" class="btn btn-ghost btn-sm">← પાછા</button>
+<div style="flex:1;min-width:0"><h1 id="cvTitle" style="font-size:15px;font-weight:700;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></h1>
+<p id="cvSub" style="font-size:11px;opacity:.8;margin:0"></p></div>
+<button class="theme-btn" onclick="toggleTheme()" style="width:36px;height:36px;font-size:16px">🌙</button>
+</div></header>
+<main style="max-width:640px;margin:0 auto;padding:18px 14px" id="chapterContent"></main>
+</div>
+<div id="passModal" class="modal-bg hidden"><div class="modal-box"><h3 class="modal-title" style="text-align:center">🔐 Edit Mode</h3>
+<input type="password" id="passInput" placeholder="પાસવર્ડ" style="text-align:center;font-size:18px;letter-spacing:3px"/>
+<p id="passError" class="hidden" style="color:var(--danger);text-align:center;font-size:13px">ખોટો પાસવર્ડ!</p>
+<div style="display:flex;gap:10px"><button onclick="closeModal('passModal')" class="btn" style="flex:1;background:var(--surface2);color:var(--text)">રદ</button><button onclick="checkPassword()" class="btn btn-primary" style="flex:1">Unlock</button></div></div></div>
+<div id="nameModal" class="modal-bg hidden"><div class="modal-box"><h3 class="modal-title">✏️ નામ</h3>
+<input id="editTitle" placeholder="ટાઇટલ"/><input id="editSubtitle" placeholder="સબટાઇટલ"/><input id="editFooter" placeholder="ફુટર"/><input id="editFooterSub" placeholder="ફુટર સબ"/>
+<div style="display:flex;gap:10px;justify-content:flex-end"><button onclick="closeModal('nameModal')" class="btn" style="background:var(--surface2);color:var(--text)">રદ</button><button onclick="saveNames()" class="btn btn-primary">સાચવો</button></div></div></div>
+<div id="subjectModal" class="modal-bg hidden"><div class="modal-box"><h3 class="modal-title">➕ વિષય</h3>
+<p style="font-size:13px;color:var(--text2);margin-bottom:8px">ધોરણ <b id="subStdLabel">6</b></p>
+<input id="newSubName" placeholder="વિષય"/><input id="newSubEmoji" value="📚"/>
+<div style="display:flex;gap:10px;justify-content:flex-end"><button onclick="closeModal('subjectModal')" class="btn" style="background:var(--surface2);color:var(--text)">રદ</button><button onclick="addSubject()" class="btn btn-primary">ઉમેરો</button></div></div></div>
+<div id="chapModal" class="modal-bg hidden"><div class="modal-box"><h3 class="modal-title">✏️ પ્રકરણ નામ</h3>
+<input id="editChapName"/>
+<div style="display:flex;gap:10px;justify-content:flex-end"><button onclick="closeModal('chapModal')" class="btn" style="background:var(--surface2);color:var(--text)">રદ</button><button onclick="saveChapName()" class="btn btn-primary">સાચવો</button></div></div></div>
+<div id="addModal" class="modal-bg hidden"><div class="modal-box"><h3 id="modalTitle" class="modal-title">➕ પ્રશ્ન</h3>
+<input id="newChap" readonly style="background:var(--surface2)"/>
+<select id="newType"><option>MCQ</option><option>ખાલી જગ્યા</option><option>ટૂંકા જવાબ</option><option>તફાવત</option><option>વૈજ્ઞાનિક કારણ</option><option>HOTS</option><option>પ્રવૃત્તિ</option><option>મને ઓળખો</option></select>
+<textarea id="newText" rows="3" placeholder="પ્રશ્ન"></textarea>
+<textarea id="newAnswer" rows="2" placeholder="જવાબ" style="border-color:var(--success)"></textarea>
+<div style="display:flex;gap:10px;justify-content:flex-end"><button onclick="closeModal('addModal')" class="btn" style="background:var(--surface2);color:var(--text)">રદ</button><button onclick="saveQuestion()" class="btn btn-primary">💾 સાચવો</button></div></div></div>
+<div id="testModal" class="modal-bg hidden" style="align-items:flex-start;overflow-y:auto;padding-top:20px">
+<div class="modal-box" style="max-width:560px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<h2 id="testTitle" style="font-size:15px;font-weight:700;color:var(--primary);margin:0">📝 25 Marks</h2>
+<button onclick="closeTest()" style="font-size:24px;background:none;border:none;cursor:pointer;color:var(--text2)">×</button></div>
+<div id="testProgress" style="font-size:12px;color:var(--text2);margin-bottom:8px"></div>
+<div id="liveScore" style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:10px"></div>
+<div id="testBody"></div>
+<div id="testResult" class="hidden" style="text-align:center;padding:28px 0"></div>
+<div id="testActions" style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
+<button onclick="closeTest()" class="btn" style="background:var(--surface2);color:var(--text)">બંધ</button>
+<button id="submitBtn" onclick="submitTest()" class="btn btn-green">સબમિટ</button></div>
+</div></div>
+
+<script>
+const PASSWORD="imvnod@210124",CLICKS=5;
+const STORE="gseb_v2026e",UNLOCK="gseb_u2026b",NOTESK="gseb_n2026",SUBS_KEY="gseb_s2026",THEME_KEY="gseb_t2026",SCORES_KEY="gseb_sc2026";
+const TIPS=["💡 દરરોજ 30 મિનિટ અભ્યાસ!","📝 પ્રશ્ન 2 વાર વાંચો.","🔬 ડાયાગ્રામ યાદ રાખો.","📐 સૂત્ર પહેલા, પછી ઉદાહરણ.","🌟 ભૂલથી શીખો.","⏰ ટેસ્ટ પહેલાં રિવિઝન.","🎯 MCQમાં ખોટા વિકલ્પ કાઢો.","📚 Notes લખો."];
+const data={"6-sci":{"title":"ધોરણ 6 કુતૂહલ (વિજ્ઞાન)","chapters":[{"name":"1. વિજ્ઞાનની અદ્ભુત દુનિયા","notes":"","questions":[{"type":"MCQ","text":"સૂર્ય આપે છે? (A) પ્રકાશ (B) ગરમી (C) બંને","answer":"(C) બંને"}]},{"name":"2. સજીવ સૃષ્ટિમાં વિવિધતા","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"પાણી ક્યારે ઉકળે?","answer":"100°C"}]},{"name":"3. ઉચિત આહાર : સ્વસ્થ શરીરનો માર્ગ","notes":"","questions":[{"type":"HOTS","text":"ચુંબકના ધ્રુવો?","answer":"ઉત્તર અને દક્ષિણ"}]},{"name":"4. ચુંબકને જાણીએ","notes":"","questions":[{"type":"MCQ","text":"સૂર્ય આપે છે? (A) પ્રકાશ (B) ગરમી (C) બંને","answer":"(C) બંને"}]},{"name":"5. લંબાઈનું માપન અને ગતિ","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"પાણી ક્યારે ઉકળે?","answer":"100°C"}]},{"name":"6. આપણી આસપાસની સામગ્રી","notes":"","questions":[{"type":"HOTS","text":"ચુંબકના ધ્રુવો?","answer":"ઉત્તર અને દક્ષિણ"}]},{"name":"7. તાપમાન અને તેનું માપન","notes":"","questions":[{"type":"MCQ","text":"સૂર્ય આપે છે? (A) પ્રકાશ (B) ગરમી (C) બંને","answer":"(C) બંને"}]},{"name":"8. પાણીની વિવિધ અવસ્થાઓની યાત્રા","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"પાણી ક્યારે ઉકળે?","answer":"100°C"}]},{"name":"9. રોજિંદા જીવનમાં અલગીકરણની પદ્ધતિઓ","notes":"","questions":[{"type":"HOTS","text":"ચુંબકના ધ્રુવો?","answer":"ઉત્તર અને દક્ષિણ"}]},{"name":"10. સજીવોની લાક્ષણિકતાઓ","notes":"","questions":[{"type":"MCQ","text":"સૂર્ય આપે છે? (A) પ્રકાશ (B) ગરમી (C) બંને","answer":"(C) બંને"}]},{"name":"11. કુદરતનો અમૂલ્ય ખજાનો","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"પાણી ક્યારે ઉકળે?","answer":"100°C"}]},{"name":"12. પૃથ્વીને પાર","notes":"","questions":[{"type":"HOTS","text":"ચુંબકના ધ્રુવો?","answer":"ઉત્તર અને દક્ષિણ"}]}]},"6-math":{"title":"ધોરણ 6 ગણિત પ્રકાશ","chapters":[{"name":"1. ગણિતમાં પૅટર્ન","notes":"","questions":[{"type":"MCQ","text":"1m = ? cm","answer":"100"}]},{"name":"2. રેખાઓ અને ખૂણાઓ","notes":"","questions":[{"type":"HOTS","text":"પેટર્ન આગળ શું?","answer":"વિદ્યાર્થી"}]},{"name":"3. સંખ્યાની રમત","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"અપૂર્ણાંક ઉદાહરણ","answer":"1/2"}]},{"name":"4. માહિતીનું નિયમન અને રજૂઆત","notes":"","questions":[{"type":"MCQ","text":"1m = ? cm","answer":"100"}]},{"name":"5. અવિભાજ્ય સંખ્યાઓ","notes":"","questions":[{"type":"HOTS","text":"પેટર્ન આગળ શું?","answer":"વિદ્યાર્થી"}]},{"name":"6. પરિમિતિ અને ક્ષેત્રફળ","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"અપૂર્ણાંક ઉદાહરણ","answer":"1/2"}]},{"name":"7. અપૂર્ણાંક","notes":"","questions":[{"type":"MCQ","text":"1m = ? cm","answer":"100"}]},{"name":"8. રચનાઓ સાથે રમત","notes":"","questions":[{"type":"HOTS","text":"પેટર્ન આગળ શું?","answer":"વિદ્યાર્થી"}]},{"name":"9. સંમિતિ","notes":"","questions":[{"type":"ટૂંકા જવાબ","text":"અપૂર્ણાંક ઉદાહરણ","answer":"1/2"}]},{"name":"10. શૂન્યની બીજી બાજુ","notes":"","questions":[{"type":"MCQ","text":"1m = ? cm","answer":"100"}]}]},"7-sci":{"title":'ધોરણ 7 વિજ્ઞાન',"chapters":[{"name":'1. વનસ્પતિમાં પોષણ',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'2. પ્રાણીઓમાં પોષણ',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'3. ઉષ્મા',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'4. એસિડ, બેઈઝ અને ક્ષાર',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'5. ભૌતિક અને રાસાયણિક ફેરફારો',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'6. શ્વસન',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'7. વનસ્પતિ અને પ્રાણીઓમાં વહન',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'8. વનસ્પતિમાં પ્રજનન',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'9. ગતિ અને સમય',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'10. વિદ્યુતપ્રવાહ અને તેની અસરો',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'11. પ્રકાશ',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]},{"name":'12. જંગલો : આપણું જીવન',"notes":"","questions":[{"type":'HOTS',"text":'પ્રકાશસંશ્લેષણ સમીકરણ',"answer":'6CO₂+6H₂O→C₆H₁₂O₆+6O₂'}]},{"name":'13. દૂષિત પાણી',"notes":"","questions":[{"type":'MCQ',"text":'ઊર્જા સ્ત્રોત? (A) સૂર્ય (B) ચંદ્ર',"answer":'(A) સૂર્ય'}]}]},"7-math":{"title":'ધોરણ 7 ગણિત',"chapters":[{"name":'1. પૂર્ણાંકો',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'2. અપૂર્ણાંક અને દશાંશ',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'3. માહિતી નિરૂપણ',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'4. સરળ સમીકરણો',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'5. રેખાઓ અને કોણ',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'6. ત્રિકોણ',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'7. ત્રિકોણની સર્વસમતા',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'8. તુલનાત્મક ગણતરી',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'9. પરિમેય અને ક્ષેત્રફળ',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'10. બીજગણિતીય રાશિઓ',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'11. ઘાત અને ઘાતાંક',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]},{"name":'12. સમમિતિ',"notes":"","questions":[{"type":'HOTS',"text":'3x+5=20',"answer":'x=5'}]},{"name":'13. માહિતીનું દૃશ્યીકરણ',"notes":"","questions":[{"type":'MCQ',"text":'−7+5=?',"answer":'−2'}]}]},"8-sci":{"title":'ધોરણ 8 વિજ્ઞાન',"chapters":[{"name":'1. પાક ઉત્પાદન અને વ્યવસ્થાપન',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'2. સૂક્ષ્મજીવો : મિત્ર અને શત્રુ',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'3. કોલસો અને પેટ્રોલિયમ',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'4. દહન અને જ્યોત',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'5. સંરક્ષણ : છોડ અને પ્રાણીઓ',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'6. પ્રાણીઓમાં પ્રજનન',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'7. કિશોરાવસ્થા તરફ',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'8. બળ અને દબાણ',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'9. ઘર્ષણ',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'10. ધ્વનિ',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'11. વિદ્યુત પ્રવાહની રાસાયણિક અસરો',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]},{"name":'12. કુદરતી ઘટનાઓ',"notes":"","questions":[{"type":'તફાવત',"text":'પુનઃપ્રાપ્ય vs અપ્રાપ્ય',"answer":'સૂર્ય vs કોલસો'}]},{"name":'13. પ્રકાશ',"notes":"","questions":[{"type":'MCQ',"text":'મેલેરિયા કારક?',"answer":'પ્લાઝમોડિયમ'}]}]},"8-math":{"title":'ધોરણ 8 ગણિત',"chapters":[{"name":'1. સંમેય સંખ્યાઓ',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'2. એકચલ સુરેખ સમીકરણ',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'3. ચતુષ્કોણની સમજ',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'4. પ્રાયોગિક ભૂમિતિ',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'5. માહિતીનું નિયમન',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'6. વર્ગ અને વર્ગમૂળ',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'7. ઘન અને ઘનમૂળ',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'8. તુલનાત્મક ગણતરી',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'9. બીજગણિતીય પદાવલીઓ અને ઓળખો',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'10. ઘનાકારોનું દૃશ્યીકરણ',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'11. માપન',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]},{"name":'12. ઘાતાંક અને ઘાત',"notes":"","questions":[{"type":'HOTS',"text":'2x+5=15',"answer":'x=5'}]},{"name":'13. સીધા અને વ્યસ્ત પ્રમાણ',"notes":"","questions":[{"type":'MCQ',"text":'સંમેય સંખ્યા ઉદાહરણ?',"answer":'−3/4'}]}]}};
+
+const EXTRA={
+ukhana:[
+{q:"ચાલે છે પણ પગ નથી, વાયુમાં રહે પણ દેખાય નથી — તે કયું?",a:"પવન"},
+{q:"રાત્રે આવે દિવસે જાય, તારલાં સાથે રમે — તે કયું?",a:"અંધારું / રાત"},
+{q:"જળમાં વસે જળ ન પીએ, પૂછો તો કહું સાચું નામ — તે કયું?",a:"માછલી"},
+{q:"હાથ વગર લખે, મુખ વગર બોલે — તે કયું?",a:"પેન / પેન્સિલ"},
+{q:"કાપો તો વધે, જોડો તો ઘટે — અજબ વસ્તુ કઈ?",a:"ખાડો / છિદ્ર"},
+{q:"ઘર ભર્યું કોઈ ન મળે, જોયું તો પોતે જ દેખાય — તે કયું?",a:"અરીસો"},
+{q:"સવારે ચાર, મધ્યાહને બે, સાંજે ત્રણ પગ — તે કોણ?",a:"મનુષ્ય (બાળક, યુવાન, વૃદ્ધ)"},
+{q:"પીવે તો મરે, ન પીવે તો મરે — તે કયું?",a:"આગ / અગ્નિ"},
+{q:"ઊંચે જાય નીચે આવે, થાકે નહીં કદી — તે કયું?",a:"પંપ / ઝૂલા"},
+{q:"માથે પાણી પેટમાં અગ્નિ, રસોઈમાં કામ આવે — તે કયું?",a:"કીટલી / સમોવર"},
+{q:"એક આંખે સર્વ જુએ, સોય સમાન નાનું — તે કયું?",a:"સોયનું નાકું / કેમેરા"},
+{q:"ગોળાકાર ફરે સદા, થાક્યું ન જણાય — તે કયું?",a:"પૃથ્વી / ચક્કર"},
+{q:"લખે છે વાંચે નહીં, કાગળ પર રહે — તે કયું?",a:"પેન / શાહી"},
+{q:"રસ્તે ચાલે પગ નથી, સાગરે મળે — તે કયું?",a:"નદી"},
+{q:"સો વર્ષ જીવે એક દિવસ મરે, અગ્નિ સ્પર્શે તો અંત — તે કયું?",a:"મેચસ્ટિક / દિવાસળી"},
+{q:"કાળું પીવે સફેદ થૂંકે, ઘર ઉપર રહે — તે કયું?",a:"ચિમની"},
+{q:"બે ભાઈ સદા સાથે, અલગ થાય નહીં — તે કયા?",a:"બે પગ / બે આંખ"},
+{q:"આકાશે લટકે પૃથ્વી પર નહીં, રાત્રે ચમકે — તે કયું?",a:"તારા"},
+{q:"ખાય પણ ભૂખ ન જાય, સર્વ ગ્રાસે — તે કયું?",a:"અગ્નિ"},
+{q:"હવામાં ઉડે પાણીમાં તરે, પાંખ છે તોય — તે કયું?",a:"બતક"},
+{q:"નાનું બીજ મોટું વૃક્ષ, વર્ષોથી ઊગે — તે કયું?",a:"કેરીનું બીજ / વડ"},
+{q:"ઊંચાઈ માપે પગ નથી, હાથમાં રહે — તે કયું?",a:"મીટરપટ્ટી / ફુટપટ્ટી"},
+{q:"ગરમી આપે જળે નહીં, આકાશે રહે — તે કયું?",a:"સૂર્ય"},
+{q:"અંધારામાં જુએ અજવાળામાં નહીં — તે કયું?",a:"ચામાચીડિયું"},
+{q:"મુખ છે અવાજ નથી, વહે સદા — તે કયું?",a:"નદી / તળાવ"},
+{q:"પગે ચાલે માથે લઈ જાય, જોડીમાં રહે — તે કયું?",a:"જુતા / પગરખાં"},
+{q:"ઘરમાં ઘર છત પર ઘર, નાનું અગ્નિ ઘર — તે કયું?",a:"માચીસની ડબ્બી"},
+{q:"વાગે ત્યારે જાણે સમય, હાથ વગર — તે કયું?",a:"ઘડિયાળ / ઘંટ"},
+{q:"સફેદ વસ્ત્ર કાળો દાગ, વિદ્યા સાથે — તે કયું?",a:"કાગળ પર શાહી"},
+{q:"જીવે નહીં મરે નહીં ચાલે સદા — તે કયું?",a:"નદી / સમય / પવન"},
+{q:"રાજા પાસે ભિક્ષુ પાસે નહીં — એક અક્ષર કયો?",a:"ર (રાજા / ભિક્ષુ)"},
+{q:"પાણી વગર તરે આકાશે ફરે — તે કયું?",a:"વાદળ"},
+{q:"ભૂખ્યું રહે ખાય નહીં, જોયું તો તું — તે કયું?",a:"અરીસો"},
+{q:"નાનું મુખ મોટું ઉદર, જળ સંગ્રહે — તે કયું?",a:"ઘડો / માટલું"},
+{q:"ત્રણ અક્ષરનું નામ ઊલટું વાંચો તોય એ જ — કયું?",a:"દીવ / નયન"},
+{q:"લીલાં પાંદડાં લાલ પુષ્પ, કંટક સહિત — તે કયું?",a:"ગુલાબ"},
+{q:"મોટું શિર નાનું કાયા, અગ્નિ જન્મે — તે કયું?",a:"દિવાસળી"},
+{q:"છત્ર આપે ફળ નહીં, હાથમાં રહે — તે કયું?",a:"છત્રી"},
+{q:"સફેદ વસ્ત્ર કાળું શિર, જળમાં તરે — તે કયું?",a:"બતક"},
+{q:"એક હસ્તે તાલી ન વાગે — સત્ય કથા કઈ?",a:"એક હાથે તાળી નથી વાગતી"},
+{q:"દ્વાર ખોલે હસ્ત નહીં, અદૃશ્ય શક્તિ — તે કયું?",a:"પવન / ચાવી"},
+{q:"કાળું શિર શ્વેત ઉદર, આકાશે ઉડે — તે કયું?",a:"કાગડો"},
+{q:"પીવે તરસ ન જાય, જળમાં વસે — તે કયું?",a:"માછલી"},
+{q:"રાત્રે જાગે દિવસે સૂએ, અંધારું પ્રિય — તે કયું?",a:"ચામાચીડિયું"},
+{q:"બે હસ્ત કાર્ય નહીં કરે, સમય બતાવે — તે કયું?",a:"ઘડિયાળ"},
+{q:"આકાશે ઉડે પાંખ નહીં, શ્વેત વસ્ત્ર — તે કયું?",a:"વાદળ"},
+{q:"ચાલે પગ નહીં વાયુ સમાન — તે કયું?",a:"પવન"},
+{q:"સર્વ ગ્રાસે તૃપ્ત ન થાય — તે કયું?",a:"અગ્નિ"},
+{q:"એક શબ્દ ઊલટું સમાન — કયું નામ?",a:"નયન / કયક"},
+{q:"જળ તન અગ્નિ હૃદય, રસોઈ રાજ — તે કયું?",a:"કીટલી"}
+],
+gk:[
+{t:"🌍 પૃથ્વી",f:"પૃથ્વી સૂર્યની આસપાસ 365¼ દિવસમાં એક પરિભ્રમણ કરે છે. પોતાની ધરી પર 24 કલાકમાં એક પ્રદક્ષિણા પૂરી કરે છે."},
+{t:"☀️ સૂર્ય",f:"સૂર્ય એક તારો છે. તેની સપાટીનું તાપમાન લગભગ 5500°C છે. પૃથ્વીને પ્રકાશ અને ઊર્જા આપે છે."},
+{t:"💧 પાણી",f:"પૃથ્વીની સપાટીનો લગભગ 71% ભાગ પાણીથી ઢંકાયેલો છે. પાણી ત્રણ અવસ્થામાં મળે — ઘન, પ્રવાહી, વાયુ."},
+{t:"❤️ હૃદય",f:"હૃદય દિવસમાં લગભગ 1,00,000 વાર ધબકે છે. તે આખા શરીરમાં લોહી પહોંચાડે છે."},
+{t:"🧠 મગજ",f:"માનવ મગજમાં લગભગ 860 કરોડ ચેતાકોષો છે. તે શરીરનું નિયંત્રણ કેન્દ્ર છે."},
+{t:"🦴 હાડકાં",f:"પુખ્ત માનવ શરીરમાં 206 હાડકાં હોય છે. બાળકોમાં વધુ હોય છે જે પછી જોડાય છે."},
+{t:"🌳 વૃક્ષ",f:"એક પુખ્ત વૃક્ષ વર્ષમાં લગભગ 20 કિલો ઓક્સિજન આપે છે. તે CO₂ શોષે છે."},
+{t:"🔢 શૂન્ય",f:"શૂન્યની શોધ ભારતમાં થઈ. આર્યભટ્ટ અને બ્રહ્મગુપ્તે તેનો વિકાસ કર્યો."},
+{t:"🌙 ચંદ્ર",f:"ચંદ્ર પર વાતાવરણ નથી તેથી અવાજ સંભળાતો નથી. ચંદ્રયાન-3એ દક્ષિણ ધ્રુવ પર ઉતરાણ કર્યું."},
+{t:"🧲 ચુંબક",f:"પૃથ્વી પોતે વિશાળ ચુંબક છે. તેના કારણે હોકાયંત્ર ઉત્તર-દક્ષિણ બતાવે છે."},
+{t:"🌈 મેઘધનુષ",f:"મેઘધનુષમાં સાત રંગ હોય છે — VIBGYOR. પ્રિઝમથી સફેદ પ્રકાશ વિભાજિત થાય છે."},
+{t:"🌬️ હવા",f:"હવામાં લગભગ 78% નાઈટ્રોજન અને 21% ઓક્સિજન છે. ઓક્સિજન શ્વસન માટે જરૂરી છે."},
+{t:"🪴 પ્રકાશસંશ્લેષણ",f:"છોડ CO₂ + પાણી + સૂર્યપ્રકાશથી ગ્લુકોઝ બનાવે છે અને O₂ મુક્ત કરે છે."},
+{t:"🌡️ તાપમાન",f:"માનવ શરીરનું સામાન્ય તાપમાન લગભગ 37°C છે. પાણી 100°Cે ઉકળે, 0°Cે જામે."},
+{t:"🚀 ચંદ્રયાન-3",f:"ભારત ચંદ્રના દક્ષિણ ધ્રુવ પર સફળતાપૂર્વક ઉતરનાર પહેલો દેશ બન્યો."},
+{t:"🛰️ આર્યભટ્ટ",f:"ભારતનું પહેલું ઉપગ્રહ 1975માં છોડવામાં આવ્યું. વિક્રમ સારાભાઈનું સ્વપ્ન."},
+{t:"💊 પેનિસિલિન",f:"એલેક્ઝાન્ડર ફ્લેમિંગે 1928માં પેનિસિલિન શોધ્યું. એન્ટિબાયોટિક યુગની શરૂઆત."},
+{t:"🇮🇳 ભારત",f:"28 રાજ્યો અને 8 કેન્દ્રશાસિત પ્રદેશો. બંધારણ 26 જાન્યુઆરી 1950થી અમલમાં."},
+{t:"📏 માપ",f:"1 મીટર = 100 સે.મી. = 1000 મિ.મી. 1 કલાક = 60 મિનિટ = 3600 સેકન્ડ."},
+{t:"🏔️ એવરેસ્ટ",f:"વિશ્વની સૌથી ઊંચી ટોચ 8848 મીટર. હિમાલયમાં આવેલી."},
+{t:"⚡ પ્રકાશ",f:"પ્રકાશની ઝડપ લગભગ 3×10⁸ મીટર/સેકન્ડ. એક વર્ષમાં જે દૂરી કાપે તે પ્રકાશવર્ષ."},
+{t:"🧬 DNA",f:"DNAમાં આનુવંશિક માહિતી સંગ્રહાયેલી હોય છે. જીવનની કોડબુક કહેવાય."},
+{t:"🐘 હાથી",f:"જમીન પરનું સૌથી મોટું પ્રાણી. સુંઢથી પાણી પીવે અને વસ્તુઓ ઊંચકે."},
+{t:"🐜 કીડી",f:"પોતાના વજનથી 10થી 50 ગણું વજન ઊંચકી શકે છે. સામૂહિક કાર્ય કરે છે."},
+{t:"🔥 અગ્નિ ત્રિકોણ",f:"અગ્નિ માટે ઓક્સિજન, બળતણ અને ગરમી — ત્રણેય જરૂરી."},
+{t:"❄️ બરફ",f:"બરફ પાણી કરતાં ઓછી ઘનતાવાળો હોવાથી પાણી પર તરે છે."},
+{t:"📐 પાઈ (π)",f:"વર્તુળની પરિમિતિને વ્યાસે ભાગતાં ≈ 3.14 મળે. તે અપરિમેય સંખ્યા છે."},
+{t:"🌊 મહાસાગર",f:"પ્રશાંત મહાસાગર વિશ્વનો સૌથી મોટો. પૃથ્વીનો 71% ભાગ જળ."},
+{t:"📚 શિક્ષણ અધિકાર",f:"6થી 14 વર્ષના બાળકોને મફત અને ફરજિયાત શિક્ષણનો અધિકાર છે."},
+{t:"🕊️ ગાંધીજી",f:"અહિંસા અને સત્યાગ્રહના માર્ગે ભારતને સ્વતંત્રતા અપાવી."},
+{t:"💡 બલ્બ",f:"થોમસ એડિસને વ્યવહારુ વીજળીના બલ્બને લોકપ્રિય બનાવ્યો."},
+{t:"📞 ટેલિફોન",f:"એલેક્ઝાન્ડર ગ્રેહામ બેલે ટેલિફોનની શોધ કરી."},
+{t:"🧪 એસિડ-બેઈઝ",f:"એસિડ ખાટા (નિંબુ), બેઈઝ કડવા/સાબુ જેવા. લિટમસથી ઓળખાય."},
+{t:"🧂 મીઠું",f:"સોડિયમ ક્લોરાઈડ (NaCl). સમુદ્ર અને ખાણમાંથી મળે."},
+{t:"🌑 ગ્રહણ",f:"સૂર્યગ્રહણ: ચંદ્ર સૂર્ય-પૃથ્વી વચ્ચે. ચંદ્રગ્રહણ: પૃથ્વી સૂર્ય-ચંદ્ર વચ્ચે."},
+{t:"🏆 નોબેલ",f:"વિજ્ઞાન, સાહિત્ય, શાંતિ વગેરે ક્ષેત્રે આપવામાં આવતું સર્વોચ્ચ સન્માન."},
+{t:"🐧 પેન્ગ્વિન",f:"ઉડી શકતા નથી પણ ઉત્તમ તરવૈયા. દક્ષિણ ધ્રુવ પ્રદેશમાં રહે."},
+{t:"🩸 લોહી",f:"શરીરમાં લગભગ 5 લિટર લોહી. ઓક્સિજન અને પોષક તત્ત્વો પહોંચાડે."},
+{t:"🫁 શ્વસન",f:"મનુષ્ય મિનિટે 12–20 વાર શ્વાસ લે છે. ઓક્સિજન લે CO₂ મુક્ત કરે."},
+{t:"🌾 હરિત ક્રાંતિ",f:"એમ.એસ. સ્વામીનાથનના નેતૃત્વે અનાજ ઉત્પાદન વધ્યું. ખાદ્ય સુરક્ષા."},
+{t:"📡 રેડિયો",f:"જગદીશચંદ્ર બોઝે રેડિયો તરંગો પર મહત્વનું કાર્ય કર્યું."},
+{t:"💻 કમ્પ્યુટર",f:"બાઈનરી (0 અને 1) પદ્ધતિ પર આધારિત. માહિતી ઝડપથી પ્રક્રિયા કરે."},
+{t:"🦠 સૂક્ષ્મજીવો",f:"કેટલાક મિત્ર (દહીંના બેક્ટેરિયા), કેટલાક રોગકારક. માઈક્રોસ્કોપથી દેખાય."},
+{t:"🌱 બીજ",f:"બીજમાં નવા છોડનું જીવન સુષુપ્ત અવસ્થામાં હોય છે. અંકુરણથી ઊગે."},
+{t:"🐝 પરાગનયન",f:"મધમાખી, પતંગિયાં અને પવન પરાગનયનમાં મદદ કરે છે. ફળ-બીજ બને."},
+{t:"🦒 જિરાફ",f:"સૌથી ઊંચું જમીન પ્રાણી. જીભ 45–50 સેમી લાંબી — પાંદડાં તોડવા."},
+{t:"⏰ સમય માપ",f:"1 કલાક=60 મિનિટ, 1 મિનિટ=60 સેકન્ડ. સૂર્ય ઘડિયાળ પ્રાચીન માપ."},
+{t:"🔬 સૂક્ષ્મ",f:"માઈક્રોસ્કોપ વગર ન દેખાય તે સૂક્ષ્મ. કોષ જીવનની એકમ."},
+{t:"🌟 તારા",f:"રાતના તારા દૂરના સૂર્ય જેવા છે. સૂર્ય નજીકનો તારો છે."},
+{t:"📖 વિજ્ઞાન",f:"વિજ્ઞાન = અવલોકન + પ્રયોગ + તારણ. પ્રશ્ન પૂછવું અને ચકાસવું."}
+],
+scientists:[
+{name:"આર્યભટ્ટ",icon:"🔭",era:"476–550 ઈ.",field:"ગણિત • ખગોળ",bio:"ભારતના મહાન ગણિતજ્ઞ અને ખગોળશાસ્ત્રી.\nશૂન્ય અને સ્થાનમાન અંકપદ્ધતિના વિકાસમાં યોગદાન.\nગ્રંથ ‘આર્યભટીય’માં ગણિત-ખગોળના સૂત્રો.\nપૃથ્વી પોતાની ધરી પર ફરે છે તે સ્પષ્ટ કહ્યું.\nપાઈ (π)નું મૂલ્ય લગભગ 3.1416 આપ્યું."},
+{name:"સી.વી. રમણ",icon:"💡",era:"1888–1970",field:"ભૌતિક વિજ્ઞાન",bio:"ભારતના નોબેલ વિજેતા ભૌતિકશાસ્ત્રી.\nરમણ અસર (Raman Effect)ની શોધ — 1930 નોબેલ.\nપ્રકાશ પદાર્થમાંથી પસાર થાય ત્યારે તરંગલંબાઈ બદલાય.\nવિજ્ઞાન સંશોધનને ભારતમાં પ્રોત્સાહન આપ્યું.\nરમણ દિવસ 28 ફેબ્રુઆરીએ ઊજવાય છે."},
+{name:"હોમી ભાભા",icon:"⚛️",era:"1909–1966",field:"પરમાણુ ઊર્જા",bio:"ભારતીય પરમાણુ કાર્યક્રમના પિતા.\nTIFR અને AEET (હવે BARC)ની સ્થાપના.\nશાંતિપૂર્ણ પરમાણુ ઊર્જાનો માર્ગ મોકલ્યો.\nકોસ્મિક કિરણો પર મહત્વનું સંશોધન.\nવિજ્ઞાન અને ટેક્નોલોજીની રાષ્ટ્રીય નીતિને આકાર આપ્યો."},
+{name:"એ.પી.જે. અબ્દુલ કલામ",icon:"🚀",era:"1931–2015",field:"મિસાઇલ • અવકાશ",bio:"‘મિસાઇલ મેન ઓફ ઈન્ડિયા’ તરીકે જાણીતા.\nઅગ્નિ, પૃથ્વી મિસાઇલ અને પોખરણ-IIમાં યોગદાન.\nભારતના 11મા રાષ્ટ્રપતિ (2002–2007).\nવિદ્યાર્થીઓને પ્રેરણા આપતા ‘પીપલ્સ પ્રેસિડેન્ટ’.\nપુસ્તક ‘અગ્નિની પાંખો’ ખૂબ લોકપ્રિય."},
+{name:"જગદીશચંદ્ર બોઝ",icon:"📡",era:"1858–1937",field:"ભૌતિક • વનસ્પતિ",bio:"રેડિયો તરંગો પર પ્રારંભિક સંશોધન કર્યું.\nછોડમાં સંવેદનશીલતા સાબિત કરી — ક્રેસ્કોગ્રાફ.\nવિજ્ઞાનને પેટન્ટ વગર ખુલ્લું રાખ્યું.\nબોઝ ઇન્સ્ટિટ્યૂટ, કોલકાતાના સ્થાપક.\nભૌતિક અને જીવવિજ્ઞાન બંનેમાં યોગદાન."},
+{name:"શ્રીનિવાસ રામાનુજન",icon:"🔢",era:"1887–1920",field:"ગણિત",bio:"સ્વયંભૂ ગણિતીય પ્રતિભા — ઔપચારિક તાલીમ ઓછી.\nસંખ્યા સિદ્ધાંત, અનંત શ્રેણી, અવિભાજ્ય સંખ્યાઓ.\nકેમ્બ્રિજમાં જી.એચ. હાર્ડી સાથે કાર્ય.\nનોટબુકમાં હજુ પણ નવા સૂત્રો મળે છે.\nરામાનુજન નંબર 1729 પ્રસિદ્ધ છે."},
+{name:"મેરી ક્યુરી",icon:"☢️",era:"1867–1934",field:"રસાયણ • ભૌતિક",bio:"પોલોનિયમ અને રેડિયમ તત્ત્વોની શોધ.\nરેડિયોકાર્યક્રમતા શબ્દ અને સંશોધન.\nબે વાર નોબેલ પારિતોષિક મેળવનાર પહેલી વ્યક્તિ.\nપ્રથમ મહિલા નોબેલ વિજેતા.\nવિજ્ઞાનમાં મહિલાઓ માટે પ્રેરણા."},
+{name:"આલ્બર્ટ આઈન્સ્ટાઈન",icon:"🌟",era:"1879–1955",field:"ભૌતિક વિજ્ઞાન",bio:"સાપેક્ષતાનો વિશિષ્ટ અને સામાન્ય સિદ્ધાંત.\nE=mc² — ઊર્જા અને દળનો સંબંધ.\nફોટોઇલેક્ટ્રિક અસર માટે 1921 નોબેલ.\nઆધુનિક ભૌતિકી અને બ્રહ્માંડવિદ્યાનો પાયો.\nશાંતિ અને માનવતા માટે પણ અવાજ ઉઠાવ્યો."},
+{name:"આઇઝેક ન્યૂટન",icon:"🍎",era:"1643–1727",field:"ભૌતિક • ગણિત",bio:"ગુરુત્વાકર્ષણનો સાર્વત્રિક નિયમ.\nગતિના ત્રણ નિયમો — યાંત્રિકીનો પાયો.\nકેલ્ક્યુલસનો સ્વતંત્ર વિકાસ.\nપ્રકાશ અને પ્રિઝમ — સફેદ પ્રકાશના રંગો.\n‘પ્રિન્સિપિયા’ મહાન ગ્રંથ."},
+{name:"ગેલિલિયો ગેલિલી",icon:"🔭",era:"1564–1642",field:"ખગોળ • ભૌતિક",bio:"ટેલિસ્કોપથી આકાશનું વ્યવસ્થિત અવલોકન.\nગુરુના ઉપગ્રહો, ચંદ્રની સપાટી, શુક્રની કળાઓ.\nસૂર્યકેન્દ્રી મોડલને ટેકો — વિવાદ સહન કર્યો.\nલોલક અને મુક્ત પતન પર પ્રયોગ.\nઆધુનિક વૈજ્ઞાનિક પદ્ધતિના પિતા માનવામાં આવે."},
+{name:"ચાર્લ્સ ડાર્વિન",icon:"🧬",era:"1809–1882",field:"જીવવિજ્ઞાન",bio:"પ્રાકૃતિક પસંદગી દ્વારા ઉત્ક્રાંતિનો સિદ્ધાંત.\n‘ઓન ધ ઓરિજિન ઑફ સ્પીસીઝ’ (1859).\nગેલાપાગોસ ટાપુઓની યાત્રાથી પ્રેરણા.\nજીવસૃષ્ટિની વિવિધતા સમજવાનો પાયો.\nઆધુનિક જીવવિજ્ઞાનનું મૂળ."},
+{name:"લૂઈ પાશ્ચર",icon:"🧪",era:"1822–1895",field:"સૂક્ષ્મજીવવિજ્ઞાન",bio:"પાશ્ચરાઇઝેશન — દૂધ વગેરે રોગમુક્ત કરવા.\nરેબીઝ અને એન્થ્રેક્સની રસી.\nજીવાણુ સિદ્ધાંત — રોગોના કારણ સૂક્ષ્મજીવો.\nસ્વયંજનનના સિદ્ધાંતને ખોટો પાડ્યો.\nઆધુનિક રસીકરણ અને સ્વચ્છતાનો પાયો."},
+{name:"થોમસ એડિસન",icon:"💡",era:"1847–1931",field:"આવિષ્કારક",bio:"વ્યવહારુ વીજળીના બલ્બને લોકપ્રિય બનાવ્યો.\nફોનોગ્રાફ (ધ્વનિ રેકોર્ડ)ની શોધ.\nમોશન પિક્ચર કેમેરામાં યોગદાન.\n1000થી વધુ પેટન્ટ — કાર્યશીલતાનું પ્રતીક.\n‘જિનિયસ એટલે 1% પ્રેરણા + 99% પરિશ્રમ’."},
+{name:"એલેક્ઝાન્ડર ફ્લેમિંગ",icon:"💊",era:"1881–1955",field:"દવાશાસ્ત્ર",bio:"1928માં પેનિસિલિનની આકસ્મિક શોધ.\nપ્રથમ વ્યાપક એન્ટિબાયોટિક — અસંખ્ય જીવ બચાવ્યા.\nનોબેલ પારિતોષિક 1945 (સહવિજેતાઓ સાથે).\nસૂક્ષ્મજીવ વિરુદ્ધ દવાનો યુગ શરૂ.\nપ્રયોગશાળામાં અવલોકનની શક્તિનું ઉદાહરણ."},
+{name:"વિક્રમ સારાભાઈ",icon:"🛰️",era:"1919–1971",field:"અવકાશ વિજ્ઞાન",bio:"ભારતીય અવકાશ કાર્યક્રમના પિતા.\nISROની સ્થાપના અને માર્ગદર્શન.\nઆર્યભટ્ટ ઉપગ્રહ માટે પાયો નાખ્યો.\nશિક્ષણ, ઉદ્યોગ અને વિજ્ઞાનને જોડ્યા.\n‘અવકાશ ટેક્નોલોજી સામાજિક વિકાસ માટે’ — દ્રષ્ટિ."},
+{name:"સત્યેન્દ્રનાથ બોઝ",icon:"🔬",era:"1894–1974",field:"સૈદ્ધાંતિક ભૌતિકી",bio:"બોઝ-આઈન્સ્ટાઈન આંકડાશાસ્ત્રના સહસર્જક.\nબોસોન કણોનું નામ તેમના પરથી.\nક્વોન્ટમ યંત્રશાસ્ત્રમાં મહત્વનું યોગદાન.\nઆઈન્સ્ટાઈને તેમના પેપરની પ્રશંસા કરી.\nભારતીય સૈદ્ધાંતિક ભૌતિકીના મહારથી."},
+{name:"મેઘનાદ સાહા",icon:"🌌",era:"1893–1956",field:"ખગોળ • ભૌતિક",bio:"સાહા આયનાઇઝેશન સમીકરણ — તારાઓનું સ્પેક્ટ્રમ.\nતારાઓના તાપમાન અને રચના સમજાઈ.\nભારતમાં વિજ્ઞાન શિક્ષણ અને સંશોધન સંસ્થાઓ.\nકલકત્તા વિશ્વવિદ્યાલયમાં પ્રાધ્યાપક.\nખગોળીય ભૌતિકીના આંતરરાષ્ટ્રીય નામ."},
+{name:"એમ.એસ. સ્વામીનાથન",icon:"🌾",era:"1925–2023",field:"કૃષિ વિજ્ઞાન",bio:"ભારતની હરિત ક્રાંતિના પિતા.\nઊંચી ઉપજવાળા અનાજના જાતિઓ વિકસાવી.\nખાદ્ય અછતમાંથી સ્વાવલંબન તરફ દેશ.\nકૃષિ વિજ્ઞાન અને નીતિમાં આંતરરાષ્ટ્રીય સન્માન.\nકિસાન અને વિજ્ઞાનને જોડનાર સેતુ."},
+{name:"નીલ્સ બોહ્ર",icon:"⚛️",era:"1885–1962",field:"પરમાણુ મોડલ",bio:"પરમાણુનું બોહ્ર મોડલ — ઇલેક્ટ્રોન કક્ષાઓ.\nક્વોન્ટમ સિદ્ધાંતના વિકાસમાં મુખ્ય ભૂમિકા.\nનોબેલ પારિતોષિક 1922.\nકોપનહેગનમાં સંશોધન કેન્દ્ર સ્થાપ્યું.\nપરમાણુ ઊર્જાના શાંતિપૂર્ણ ઉપયોગના હિમાયતી."},
+{name:"રોઝાલિન્ડ ફ્રેન્કલિન",icon:"🧬",era:"1920–1958",field:"DNA રચના",bio:"X-ray Diffractionથી DNAની તસવીરો.\nડબલ હેલિક્સ સમજવામાં નિર્ણાયક યોગદાન.\nવૉટસન-ક્રિકના મોડલને આધાર મળ્યો.\nમહિલા વૈજ્ઞાનિક તરીકે પ્રેરણા.\nવિજ્ઞાનમાં યોગદાનની યોગ્ય માન્યતા પછીથી મળી."}
+],
+instruments:[
+{name:"માઈક્રોસ્કોપ",icon:"🔬",use:"સૂક્ષ્મ વસ્તુઓને મોટી કરી જોવા.\nકોષ, સૂક્ષ્મજીવ, પેશીનું અવલોકન.\nલેન્સની મદદથી વિસ્તરણ.\nશાળા-પ્રયોગશાળામાં મૂળભૂત સાધન.\nજીવવિજ્ઞાનનું ‘આંખ’ કહેવાય."},
+{name:"ટેલિસ્કોપ",icon:"🔭",use:"દૂરની વસ્તુઓ — તારા, ગ્રહ, ચંદ્ર.\nખગોળીય અવલોકન માટે.\nપ્રકાશ એકત્ર કરી મોટી છબી બનાવે.\nગેલિલિયોએ આકાશ સમજવા વાપર્યું.\nરિફ્રેક્ટર અને રિફ્લેક્ટર પ્રકાર."},
+{name:"થર્મોમીટર",icon:"🌡️",use:"તાપમાન માપવાનું સાધન.\nપારો અથવા ડિજિટલ સેન્સર.\n°C અથવા °Fમાં વાંચન.\nશરીર, હવા, પ્રવાહીનું તાપમાન.\nપ્રયોગ અને આરોગ્ય બંનેમાં જરૂરી."},
+{name:"હોકાયંત્ર",icon:"🧭",use:"દિશા નક્કી કરવા.\nચુંબકીય સોય ઉત્તર-દક્ષિણ બતાવે.\nપૃથ્વીના ચુંબકત્વ પર આધારિત.\nયાત્રા, નકશો, સ્કાઉટિંગમાં ઉપયોગી.\nચાર મુખ્ય દિશા — N S E W."},
+{name:"બેરોમીટર",icon:"⏲️",use:"વાયુમંડળીય દબાણ માપવા.\nહવામાન આગાહીમાં મહત્વનું.\nપારાનું અથવા એનરોઇડ.\nદબાણ ઘટે તો વાવાઝોડાની શક્યતા.\nઊંચાઈ માપવામાં પણ મદદ."},
+{name:"સ્પ્રિંગ બેલેન્સ",icon:"⚖️",use:"વજન (બળ) માપવા.\nસ્પ્રિંગના ખેંચાણથી વાંચે.\nન્યૂટન (N) અથવા ગ્રામમાં.\nપ્રયોગશાળા અને બજારમાં.\nહૂક પર વસ્તુ લટકાવી માપાય."},
+{name:"મીટર સ્કેલ",icon:"📏",use:"લંબાઈ માપવાનું સાદું સાધન.\n1 m = 100 cm = 1000 mm.\nસીધી રેખીય માપ માટે.\nશાળાના દરેક પ્રયોગમાં.\nચોક્કસતા માટે આંખ સીધી રાખો."},
+{name:"માપન સિલિન્ડર",icon:"🧪",use:"પ્રવાહીનું કદ (આયતન) માપવા.\nml અને Lમાં અંકિત.\nમેનિસ્કસની નીચેની સપાટી વાંચો.\nપ્રયોગમાં ચોક્કસ માત્રા.\nકાચ અથવા પ્લાસ્ટિકનું."},
+{name:"બીકર",icon:"🧴",use:"પ્રવાહી રાખવા અને મિશ્રણ કરવા.\nમોટા મોંવાળું પાત્ર.\nગરમી આપી શકાય (કાચ).\nપ્રયોગશાળાનું મૂળભૂત પાત્ર.\nકદની અંદાજે અંકિત હોય."},
+{name:"ટેસ્ટ ટ્યુબ",icon:"🧪",use:"નાના પ્રમાણમાં પ્રતિક્રિયા.\nગરમી આપીને પરીક્ષણ.\nટેસ્ટ ટ્યુબ હોલ્ડરથી પકડો.\nરસાયણ અને જીવવિજ્ઞાનમાં.\nસાફ અને સૂકી રાખવી જરૂરી."},
+{name:"બન્સન બર્નર",icon:"🔥",use:"પ્રયોગશાળામાં ગરમી આપવા.\nગેસની નિયંત્રિત જ્યોત.\nવાયુ મિશ્રણથી નીલી જ્યોત.\nત્રિપાદ અને વાયર ગોઝ સાથે.\nસાવધાની — અગ્નિ સુરક્ષા."},
+{name:"ત્રિપાદ સ્ટેન્ડ",icon:"🦵",use:"પાત્રને આગ ઉપર ટેકો આપવા.\nત્રણ પગ — સ્થિર આધાર.\nવાયર ગોઝ ઉપર મૂકાય.\nબીકર/ફ્લાસ્ક ગરમ કરતાં.\nલોખંડનું મજબૂત માળખું."},
+{name:"ડ્રોપર",icon:"💧",use:"ટીપાં ટીપાં પ્રવાહી લેવા-મૂકવા.\nરબરના બલ્બથી ચૂસાય.\nચોક્કસ થોડી માત્રા.\nસૂચક, દવા, પ્રયોગમાં.\nદરેક રસાયણ માટે અલગ સાફ."},
+{name:"ફનલ",icon:"🔽",use:"પ્રવાહી રેડવા અને ગાળણ.\nછિદ્રવાળા કાગળ સાથે ગાળણ.\nસાંકડી ગરદનવાળી બોટલમાં.\nકાચ અથવા પ્લાસ્ટિક.\nઘન-પ્રવાહી અલગ કરવા."},
+{name:"મેગ્નિફાઈંગ ગ્લાસ",icon:"🔍",use:"વસ્તુને મોટી કરી જોવા.\nએક ઉત્તલ લેન્સ.\nનાના અક્ષર, કીટ, છોડ.\nસાદું અને સસ્તું સાધન.\nકેન્દ્રમાંથી જોવાથી સ્પષ્ટ."},
+{name:"એમીટર",icon:"🔌",use:"વિદ્યુત પ્રવાહ માપવા (એમ્પિયર).\nસર્કિટમાં શ્રેણીમાં જોડાય.\nધન-ઋણ ધ્રુવ ધ્યાને રાખો.\nવિદ્યુત પ્રયોગનું મુખ્ય મીટર.\nઅતિ પ્રવાહથી બચાવો."},
+{name:"વોલ્ટમીટર",icon:"🔋",use:"વિદ્યુત વોલ્ટેજ (વિભવાંતર) માપવા.\nસમાંતરમાં જોડાય.\nસેલ અથવા બે બિંદુ વચ્ચે.\nવોલ્ટમાં વાંચન.\nએમીટરથી અલગ જોડાણ."},
+{name:"બેટરી / સેલ",icon:"🔋",use:"વિદ્યુત ઊર્જાનો સ્ત્રોત.\nરાસાયણિક ઊર્જા → વિદ્યુત.\nધન (+) અને ઋણ (−) ધ્રુવ.\nસર્કિટમાં પ્રવાહ ચલાવે.\nસૂકા સેલ અને ચાર્જેબલ."},
+{name:"સ્વિચ",icon:"🔘",use:"પરિપથ ચાલુ અથવા બંધ કરવા.\nસર્કિટનું નિયંત્રણ.\nસુરક્ષા અને સગવડ.\nઘર અને પ્રયોગશાળા બંનેમાં.\nખુલ્લું = બંધ, બંધ = ચાલુ."},
+{name:"લેન્સ",icon:"👓",use:"પ્રકાશને કેન્દ્રિત અથવા વિખેરવા.\nઉત્તલ (મોટું) / અવતલ (નાનું).\nચશ્મા, માઈક્રોસ્કોપ, કેમેરા.\nકેન્દ્રબિંદુ અને ફોકસ લંબાઈ.\nપ્રકાશના નિયમો શીખવા."},
+{name:"પ્રિઝમ",icon:"🔺",use:"સફેદ પ્રકાશને સાત રંગમાં વિભાજિત.\nમેઘધનુષ સમજાવે.\nત્રિકોણીય કાચનું ખંડ.\nવિચલન અને વિભાજન.\nન્યૂટનના પ્રયોગનું સાધન."},
+{name:"અરીસો",icon:"🪞",use:"પ્રકાશનું પરાવર્તન.\nસમતલ — સમાન આભાસી પ્રતિબિંબ.\nગોળાકાર — મોટું/નાનું પ્રતિબિંબ.\nપેરિસ્કોપ, હેડલાઈટમાં.\nઆંખે જોઈને કાયદા ચકાસો."},
+{name:"સ્ટેથોસ્કોપ",icon:"🩺",use:"હૃદય અને ફેફસાંના અવાજ સાંભળવા.\nડોક્ટરનું મુખ્ય નિદાન સાધન.\nધ્વનિને કાન સુધી પહોંચાડે.\nધબકાર અને શ્વાસ તપાસ.\nઆરોગ્ય વિજ્ઞાનમાં અનિવાર્ય."},
+{name:"સેકન્ડ ઘડિયાળ",icon:"⏱️",use:"પ્રયોગમાં ચોક્કસ સમય માપવા.\nસેકન્ડ અને મિનિટ.\nગતિ, લોલક, પ્રતિક્રિયા સમય.\nસ્ટાર્ટ-સ્ટોપ સુવિધા.\nભૌતિકી પ્રયોગનું સાથી."},
+{name:"પેટ્રી ડીશ",icon:"🧫",use:"સૂક્ષ્મજીવ અથવા કોષ કલ્ચર.\nસપાટ ગોળ ઢાંકણવાળું પાત્ર.\nજીવવિજ્ઞાન પ્રયોગો.\nઅગર માધ્યમ પર ઉગાડવા.\nસ્ટેરાઇલ (જંતુમુક્ત) રાખો."},
+{name:"ત્રાજવું / બેલેન્સ",icon:"⚖️",use:"દળ (માસ) માપવા.\nમાનક વજન સાથે સરખામણી.\nબંને તરફ સમાન થાય ત્યારે વાંચો.\nરસાયણ અને ભૌતિકીમાં.\nચોક્કસતા માટે સમતલ સપાટી."},
+{name:"વેર્નિયર કેલિપર્સ",icon:"📐",use:"આંતરિક, બાહ્ય અને ઊંડાઈ માપ.\n0.1 mm સુધી ચોક્કસ.\nમુખ્ય સ્કેલ + વેર્નિયર સ્કેલ.\nનળી, ગોળી, સળિયાનું માપ.\nભૌતિકી પ્રયોગમાં અગત્યનું."},
+{name:"સ્ક્રૂ ગેજ",icon:"🔧",use:"ખૂબ પાતળી જાડાઈ માપવા.\n0.01 mm સુધી ચોક્કસ.\nતાર, કાગળ, પ્લેટ.\nસ્ક્રૂની પિચ પર આધારિત.\nમાઈક્રોમીટર પણ કહેવાય."},
+{name:"મેગ્નેટ",icon:"🧲",use:"લોખંડ / સ્ટીલ આકર્ષવા.\nઉત્તર-દક્ષિણ ધ્રુવ.\nહોકાયંત્ર, મોટર, ડાયનેમો.\nસમાન ધ્રુવ દૂર, વિષમ નજીક.\nકુદરતી અને કૃત્રિમ."},
+{name:"ઇલેક્ટ્રોમેગ્નેટ",icon:"⚡",use:"વિદ્યુતથી ચુંબકત્વ ઉત્પન્ન.\nપ્રવાહ બંધ થતાં ચુંબકત્વ જાય.\nક્રેન, ઘંટ, રિલેમાં.\nકોઇલ + લોખંડનું અંતઃકેન્દ્ર.\nઔદ્યોગિક અને ઘરેલું ઉપયોગ."},
+{name:"સોલાર પેનલ",icon:"☀️",use:"સૂર્યપ્રકાશને વિદ્યુતમાં ફેરવવા.\nપુનઃપ્રાપ્ય ઊર્જા સ્ત્રોત.\nફોટોવોલ્ટેઇક કોષો.\nઘર, કેલ્ક્યુલેટર, ઉપગ્રહ.\nપર્યાવરણ મૈત્રીપૂર્ણ."},
+{name:"એનિમોમીટર",icon:"🌬️",use:"પવનની ઝડપ માપવા.\nહવામાન સ્ટેશનમાં.\nકપ અથવા પ્રોપેલર પ્રકાર.\nkm/h અથવા m/sમાં.\nવાવાઝોડા અને ઉડ્ડયનમાં."},
+{name:"રેઈન ગેજ",icon:"🌧️",use:"વરસાદની માત્રા માપવા.\nmmમાં વાંચન.\nનળાકાર પાત્ર + માપન સ્કેલ.\nહવામાન વિભાગનું સાધન.\nકૃષિ અને પૂર આગાહી."},
+{name:"ગ્લોબ",icon:"🌍",use:"પૃથ્વીનું ત્રિ-પરિમાણીય મોડલ.\nખંડ, મહાસાગર, દેશ.\nધરી 23½° નમેલી — ઋતુઓ.\nભૂગોળ શિક્ષણનું ઉત્તમ સાધન.\nરોટેશન અને રિવોલ્યુશન સમજાવે."},
+{name:"નકશો",icon:"🗺️",use:"સપાટ કાગળ પર પૃથ્વી/પ્રદેશ.\nસ્કેલ, દિશા, સંકેત.\nરસ્તા, નદી, પહાડ દર્શાવે.\nયાત્રા અને અભ્યાસમાં.\nરાજનીતિક અને ભૌગોલિક પ્રકાર."},
+{name:"કેલ્ક્યુલેટર",icon:"🔢",use:"ઝડપી અને ચોક્કસ ગણતરી.\nસરવાળો, ગુણાકાર, વર્ગમૂળ.\nવૈજ્ઞાનિક મોડલમાં સાઇન-કોસ.\nશાળા અને દુકાન બંનેમાં.\nબેટરી અથવા સોલાર."},
+{name:"કમ્પ્યુટર",icon:"💻",use:"માહિતી સંગ્રહ અને પ્રક્રિયા.\nશિક્ષણ, સંશોધન, મનોરંજન.\nબાઈનરી ભાષા — 0 અને 1.\nહાર્ડવેર + સોફ્ટવેર.\nઆધુનિક યુગનું મુખ્ય સાધન."},
+{name:"પ્રોજેક્ટર",icon:"📽️",use:"છબી/સ્લાઇડ મોટી કરી દીવાલ પર.\nવર્ગ અને મીટિંગમાં.\nLCD / LED ટેક્નોલોજી.\nશિક્ષણને દૃશ્યમાન બનાવે.\nઅંધારું વાતાવરણ સારું."},
+{name:"સ્પીકર",icon:"🔊",use:"વિદ્યુત સંકેતને અવાજમાં ફેરવવા.\nસંગીત, ઘોષણા, પ્રયોગ.\nમેગ્નેટ અને કોઇલની મદદ.\nઘરથી સ્ટેડિયમ સુધી.\nવોલ્યુમ નિયંત્રણ સાથે."},
+{name:"માઈક્રોફોન",icon:"🎤",use:"અવાજને વિદ્યુત સંકેતમાં ફેરવવા.\nરેકોર્ડિંગ અને સ્પીકર સિસ્ટમ.\nડાયાફ્રેમની કંપન.\nગાયન, ભાષણ, વિજ્ઞાન પ્રયોગ.\nસ્પીકરનો ઊલટો કાર્ય."},
+{name:"કેમેરા",icon:"📷",use:"પ્રકાશથી છબી પકડવા.\nલેન્સ + સેન્સર / ફિલ્મ.\nવિજ્ઞાનમાં અવલોકન નોંધ.\nમોબાઇલથી DSLR સુધી.\nસમય અને સ્થળ કાયમી."},
+{name:"GPS",icon:"📍",use:"ઉપગ્રહથી સ્થાન નક્કી કરવા.\nઅક્ષાંશ-રેખાંશ આપે.\nનેવિગેશન, નકશો, બચાવ કાર્ય.\nમોબાઇલ અને વાહનમાં.\nવૈશ્વિક પોઝિશનિંગ સિસ્ટમ."},
+{name:"કેલરીએમીટર",icon:"🥣",use:"ઉષ્મા માત્રા માપવા.\nઉષ્માસંબંધી પ્રયોગો.\nઇન્સ્યુલેટેડ પાત્ર.\nદળ × ઉષ્માધારિતા × ΔT.\nભૌતિકી પ્રયોગશાળા."},
+{name:"ગેલ્વેનોમીટર",icon:"📉",use:"ખૂબ નાનો વિદ્યુત પ્રવાહ શોધવા.\nસંવેદનશીલ મીટર.\nએમીટર-વોલ્ટમીટરનો આધાર.\nદિશા અને માત્રા બતાવે.\nવિદ્યુત પ્રયોગમાં."},
+{name:"રેઝિસ્ટર",icon:"📶",use:"પ્રવાહને નિયંત્રિત પ્રતિરોધ.\nઓહ્મ (Ω)માં માપ.\nસર્કિટમાં વોલ્ટેજ વહેંચણી.\nફિક્સ્ડ અને વેરિએબલ.\nઓહ્મના નિયમનો આધાર."},
+{name:"સ્લાઇડ (માઈક્રો)",icon:"🧫",use:"નમૂનો માઈક્રોસ્કોપ હેઠળ રાખવા.\nપાતળો કાચનો ટુકડો.\nકવર સ્લિપથી ઢાંકાય.\nકોષ, પરાગ, પાણીના જીવ.\nસ્વચ્છ અને પાતળો નમૂનો."},
+{name:"પિપેટ",icon:"💧",use:"ચોક્કસ કદનું પ્રવાહી માપી લેવા.\nmlમાં અંકિત.\nરસાયણ વિશ્લેષણમાં.\nમોંથી ન ચૂસો — પિપેટ ફિલર.\nચોક્કસતા માટે મેનિસ્કસ."},
+{name:"ઇલેક્ટ્રોમીટર",icon:"⚡",use:"સ્થિર વિદ્યુત આવેશ માપવા-શોધવા.\nસોનાના પાંદડાનું અથવા ડિજિટલ.\nઆવેશની હાજરી બતાવે.\nસ્થિર વિદ્યુત પ્રયોગો.\nશાળામાં સાદું પાંદડા વાળું."},
+{name:"સ્ફિગ્મોમેનોમીટર",icon:"💉",use:"બ્લડ પ્રેશર (રક્તદબાણ) માપવા.\nmmHgમાં સિસ્ટોલિક/ડાયસ્ટોલિક.\nકફ + મેનોમીટર + સ્ટેથોસ્કોપ.\nઆરોગ્ય તપાસનું મુખ્ય સાધન.\nસામાન્ય ≈ 120/80 mmHg."},
+{name:"વાયર ગોઝ",icon:"🔲",use:"બીકરને સમાન ગરમી આપવા.\nત્રિપાદ પર મૂકાય.\nલોખંડની જાળી + એસ્બેસ્ટોસ કેન્દ્ર.\nસીધી જ્યોતથી કાચ ન તૂટે.\nપ્રયોગશાળા સુરક્ષા સાધન."}
+]
+};
+const EXTRA_KEY="gseb_extra_v2";
+function loadExtra(){try{var s=localStorage.getItem(EXTRA_KEY);if(s){var p=JSON.parse(s);if(p.ukhana)EXTRA.ukhana=p.ukhana;if(p.gk)EXTRA.gk=p.gk;if(p.scientists)EXTRA.scientists=p.scientists;if(p.instruments)EXTRA.instruments=p.instruments;}}catch(e){}}
+function saveExtra(){try{localStorage.setItem(EXTRA_KEY,JSON.stringify({ukhana:EXTRA.ukhana,gk:EXTRA.gk,scientists:EXTRA.scientists,instruments:EXTRA.instruments}));}catch(e){}}
+const FORMULAS_KEY="gseb_formulas_v1",GLOSSARY_KEY="gseb_gloss_v1",BADGES_KEY="gseb_badges_v1",DAILY_KEY="gseb_daily_v1";
+let FORMULAS={"6-math":[{"t":"પરિમિતિ","f":"ચોરસ: 4×બાજુ | લંબચોરસ: 2(લ+પ)"},{"t":"ક્ષેત્રફળ","f":"ચોરસ: બાજુ² | લંબચોરસ: લ×પ"},{"t":"માપ","f":"1m=100cm=1000mm | 1km=1000m"}],
+"6-sci":[{"t":"પાણી","f":"ઉકળે 100°C | જામે 0°C"},{"t":"હવા","f":"N₂ ~78% | O₂ ~21%"}],
+"7-math":[{"t":"(a+b)²","f":"a²+2ab+b²"},{"t":"(a-b)²","f":"a²-2ab+b²"},{"t":"ત્રિકોણ","f":"કોણ સરવાળો = 180°"},{"t":"%","f":"(ભાગ/કુલ)×100"}],
+"7-sci":[{"t":"પ્રકાશસંશ્લેષણ","f":"6CO₂+6H₂O→C₆H₁₂O₆+6O₂"},{"t":"ઝડપ","f":"ઝડપ = અંતર / સમય"}],
+"8-math":[{"t":"સંમેય","f":"p/q સ્વરૂપ, q≠0"},{"t":"(a+b)²","f":"a²+2ab+b²"},{"t":"√","f":"√16=4 | ∛27=3"},{"t":"%","f":"x% of y = (x/100)×y"}],
+"8-sci":[{"t":"દબાણ","f":"દબાણ = બળ / ક્ષેત્રફળ"},{"t":"ઘર્ષણ","f":"લોટણ < સરકતું"}]};
+let GLOSSARY=[
+{w:"પ્રકાશસંશ્લેષણ",m:"છોડ સૂર્યપ્રકાશથી ખોરાક બનાવે તે પ્રક્રિયા"},
+{w:"સંમેય સંખ્યા",m:"p/q સ્વરૂપની સંખ્યા, જ્યાં q≠0"},
+{w:"ચુંબક",m:"લોખંડને આકર્ષે તે પદાર્થ — ધ્રુવો N/S"},
+{w:"કોષ",m:"જીવનની સૌથી નાની એકમ"},
+{w:"અણુ",m:"તત્ત્વનો સૌથી નાનો કણ"},
+{w:"પરિમિતિ",m:"આકારની ચારેય બાજુઓનો સરવાળો"},
+{w:"ક્ષેત્રફળ",m:"સપાટી કેટલી જગ્યા રોકે છે"},
+{w:"ઘર્ષણ",m:"બે સપાટી વચ્ચે વિરોધી બળ"},
+{w:"દબાણ",m:"એકમ ક્ષેત્રફળ પર લાગતું બળ"},
+{w:"વિદ્યુત પ્રવાહ",m:"ઇલેક્ટ્રોનનો પ્રવાહ — એમ્પિયરમાં"},
+{w:"એસિડ",m:"ખાટો સ્વાદ — લાલ લિટમસ"},
+{w:"બેઈઝ",m:"સાબુ જેવો — વાદળી લિટમસ"},
+{w:"ગુરુત્વાકર્ષણ",m:"પૃથ્વી વસ્તુઓને નીચે ખેંચે તે બળ"},
+{w:"અંકુરણ",m:"બીજમાંથી નવો છોડ ઊગવાની શરૂઆત"},
+{w:"પરાગનયન",m:"પરાગનું એક ફૂલથી બીજા ફૂલમાં જવું"},
+{w:"સ્વાસ્થ્ય",m:"શારીરિક, માનસિક અને સામાજિક સુખાકારી"},
+{w:"પોષણ",m:"શરીરને ઊર્જા અને વૃદ્ધિ માટે મળતું ખોરાક"},
+{w:"શ્વસન",m:"O₂ લઈ CO₂ મુક્ત કરવાની ક્રિયા"},
+{w:"પર્યાવરણ",m:"આપણી આસપાસની જીવંત અને અજીવ વસ્તુઓ"},
+{w:"ઊર્જા",m:"કામ કરવાની ક્ષમતા — જૂલમાં માપાય"}
+];
+
+let subjects={"6":[{"id":"sci","name":"વિજ્ઞાન","emoji":"🔬","color":"#10b981"},{"id":"math","name":"ગણિત","emoji":"📐","color":"#3b82f6"}],"7":[{"id":"sci","name":"વિજ્ઞાન","emoji":"🔬","color":"#8b5cf6"},{"id":"math","name":"ગણિત","emoji":"📐","color":"#f43f5e"}],"8":[{"id":"sci","name":"વિજ્ઞાન","emoji":"🔬","color":"#f97316"},{"id":"math","name":"ગણિત","emoji":"📐","color":"#d946ef"}]};
+const MATERIALS={"6-sci":[{"t":"મહત્વના મુદ્દા","items":["વિજ્ઞાન=અવલોકન+પ્રયોગ","પાણી 100°C ઉકળે"]}],"6-math":[{"t":"સૂત્રો","items":["1m=100cm","ક્ષેત્રફળ=બાજુ²"]}],"7-sci":[{"t":"પ્રકાશસંશ્લેષણ","items":["6CO₂+6H₂O→C₆H₁₂O₆+6O₂"]}],"7-math":[{"t":"સૂત્રો","items":["(a+b)²=a²+2ab+b²","ત્રિકોણ=180°"]}],"8-sci":[{"t":"મુદ્દા","items":["મેલેરિયા: પ્લાઝમોડિયમ","પુનઃપ્રાપ્ય: સૂર્ય"]}],"8-math":[{"t":"સૂત્રો","items":["સંમેય=p/q (q≠0)","√16=4"]}]};
+let currentStd="6",currentSub="sci",clickCount=0,isUnlocked=false;
+let editingIndex=null,currentTest=null,editingChap=null,targetChapterIndex=null,viewKey=null,viewCi=null,qFilter="all";
+function applyTheme(t){document.documentElement.setAttribute("data-theme",t);localStorage.setItem(THEME_KEY,t);document.querySelectorAll(".theme-btn").forEach(function(b){b.textContent=t==="dark"?"☀️":"🌙";});}
+function toggleTheme(){applyTheme((document.documentElement.getAttribute("data-theme")||"light")==="light"?"dark":"light");}
+(function(){applyTheme(localStorage.getItem(THEME_KEY)||"light");})();
+function fireMini(){if(typeof confetti==="function")confetti({particleCount:40,spread:55,origin:{y:0.7},colors:["#6366f1","#8b5cf6","#ec4899","#10b981"]});}
+function fireBig(){if(typeof confetti!=="function")return;var e=Date.now()+2800;(function f(){confetti({particleCount:5,angle:60,spread:70,origin:{x:0}});confetti({particleCount:5,angle:120,spread:70,origin:{x:1}});if(Date.now()<e)requestAnimationFrame(f);})();}
+
+function renderUkhana(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#f59e0b;margin-bottom:6px">🧩 ગુજરાતી ઉખાણા</h2><p style="font-size:13px;color:var(--text2);margin-bottom:10px">'+EXTRA.ukhana.length+' ઉખાણા • જૂની ઢબ • જવાબ માટે કાર્ડ ક્લિક</p>';
+html+='<button onclick="addExtraItem(\'ukhana\')" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ ઉખાણું ઉમેરો</button>';
+EXTRA.ukhana.forEach(function(u,i){html+='<div class="card" style="padding:14px;margin-bottom:10px"><div style="display:flex;gap:10px;cursor:pointer" onclick="var a=this.parentNode.querySelector(\'.ans\');if(a)a.classList.toggle(\'hidden\')"><span style="font-weight:800;color:#f59e0b">'+(i+1)+'.</span><div style="flex:1"><div style="font-size:14px;line-height:1.55">'+u.q+'</div><div class="ans answer-box hidden" style="margin-top:8px">💡 '+u.a+'</div></div></div>';
+html+='<div class="edit-only" style="display:flex;gap:8px;margin-top:8px"><button onclick="editExtraItem(\'ukhana\','+i+')" class="btn btn-amber btn-sm">✏️</button><button onclick="delExtraItem(\'ukhana\','+i+')" class="btn btn-red btn-sm">🗑️</button></div></div>';});
+document.getElementById("dynamicArea").innerHTML=html;}
+
+
+function renderGK(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#06b6d4;margin-bottom:6px">🌍 જાણવા જેવું • GK</h2><p style="font-size:13px;color:var(--text2);margin-bottom:10px">'+EXTRA.gk.length+' હકીકતો</p>';
+html+='<button onclick="addExtraItem(\'gk\')" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ હકીકત ઉમેરો</button>';
+EXTRA.gk.forEach(function(g,i){html+='<div class="card" style="padding:14px;margin-bottom:10px"><div style="font-weight:700;font-size:14px;margin-bottom:6px">'+g.t+'</div><div style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap">'+g.f+'</div>';
+html+='<div class="edit-only" style="display:flex;gap:8px;margin-top:8px"><button onclick="editExtraItem(\'gk\','+i+')" class="btn btn-amber btn-sm">✏️</button><button onclick="delExtraItem(\'gk\','+i+')" class="btn btn-red btn-sm">🗑️</button></div></div>';});
+document.getElementById("dynamicArea").innerHTML=html;}
+
+
+function renderScientists(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#a855f7;margin-bottom:6px">👨‍🔬 વૈજ્ઞાનિકોનો પરિચય</h2><p style="font-size:13px;color:var(--text2);margin-bottom:10px">'+EXTRA.scientists.length+' વૈજ્ઞાનિક • 5 લીટી પરિચય</p>';
+html+='<button onclick="addExtraItem(\'scientists\')" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ વૈજ્ઞાનિક ઉમેરો</button>';
+EXTRA.scientists.forEach(function(s,i){html+='<div class="card" style="padding:16px;margin-bottom:12px"><div style="display:flex;gap:14px"><div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#a855f7,#6366f1);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">'+s.icon+'</div><div style="flex:1"><div style="font-weight:800;font-size:15px">'+s.name+'</div><div style="font-size:11px;color:var(--text2);margin:2px 0 8px">'+s.era+' • '+s.field+'</div><div style="font-size:13px;line-height:1.65;color:var(--text2);white-space:pre-wrap">'+s.bio+'</div></div></div>';
+html+='<div class="edit-only" style="display:flex;gap:8px;margin-top:10px"><button onclick="editExtraItem(\'scientists\','+i+')" class="btn btn-amber btn-sm">✏️</button><button onclick="delExtraItem(\'scientists\','+i+')" class="btn btn-red btn-sm">🗑️</button></div></div>';});
+document.getElementById("dynamicArea").innerHTML=html;}
+
+
+function renderInstruments(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#ef4444;margin-bottom:6px">🔭 વૈજ્ઞાનિક સાધનો</h2><p style="font-size:13px;color:var(--text2);margin-bottom:10px">'+EXTRA.instruments.length+' સાધનો • 5 લીટી પરિચય</p>';
+html+='<button onclick="addExtraItem(\'inst\')" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ સાધન ઉમેરો</button>';
+EXTRA.instruments.forEach(function(ins,i){html+='<div class="card" style="padding:14px;margin-bottom:12px"><div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:36px;flex-shrink:0">'+ins.icon+'</div><div style="flex:1"><div style="font-weight:800;font-size:15px;margin-bottom:6px">'+ins.name+'</div><div style="font-size:13px;color:var(--text2);line-height:1.65;white-space:pre-wrap">'+ins.use+'</div></div></div>';
+html+='<div class="edit-only" style="display:flex;gap:8px;margin-top:8px"><button onclick="editExtraItem(\'inst\','+i+')" class="btn btn-amber btn-sm">✏️</button><button onclick="delExtraItem(\'inst\','+i+')" class="btn btn-red btn-sm">🗑️</button></div></div>';});
+document.getElementById("dynamicArea").innerHTML=html;}
+
+
+
+function delExtraItem(kind,i){if(!isUnlocked)return;if(!confirm("કાઢી નાખવું?"))return;var k=kind==="inst"?"instruments":kind;EXTRA[k].splice(i,1);saveExtra();if(kind==="ukhana")renderUkhana();else if(kind==="gk")renderGK();else if(kind==="scientists")renderScientists();else renderInstruments();}
+function addExtraItem(kind){if(!isUnlocked){alert("Edit Mode: હેડર 5 વાર ટચ");return;}window._extraKind=kind;window._extraIdx=-1;openExtraModal(kind,null);}
+function editExtraItem(kind,i){if(!isUnlocked)return;window._extraKind=kind;window._extraIdx=i;var k=kind==="inst"?"instruments":kind;openExtraModal(kind,EXTRA[k][i]);}
+function openExtraModal(kind,item){var box=document.getElementById("extraModal");if(!box){alert("Modal missing");return;}document.getElementById("extraModalTitle").textContent=item?"✏️ એડિટ":"➕ નવું ઉમેરો";
+var fields=document.getElementById("extraFields");fields.innerHTML="";
+if(kind==="ukhana"){fields.innerHTML='<label style="font-size:12px;color:var(--text2)">ઉખાણું</label><textarea id="ex_q" rows="3" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px">'+(item?item.q:"")+'</textarea><label style="font-size:12px;color:var(--text2)">જવાબ</label><input id="ex_a" value="'+(item?item.a:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit"/>';}
+else if(kind==="gk"){fields.innerHTML='<label style="font-size:12px;color:var(--text2)">શીર્ષક</label><input id="ex_t" value="'+(item?item.t:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><label style="font-size:12px;color:var(--text2)">હકીકત</label><textarea id="ex_f" rows="4" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit">'+(item?item.f:"")+'</textarea>';}
+else if(kind==="scientists"){fields.innerHTML='<input id="ex_name" placeholder="નામ" value="'+(item?item.name:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><input id="ex_icon" placeholder="આયકન 🔭" value="'+(item?item.icon:"🔬")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><input id="ex_era" placeholder="કાળ" value="'+(item?item.era:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><input id="ex_field" placeholder="ક્ષેત્ર" value="'+(item?item.field:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><label style="font-size:12px;color:var(--text2)">પરિચય (5 લીટી)</label><textarea id="ex_bio" rows="5" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit">'+(item?item.bio:"")+'</textarea>';}
+else{fields.innerHTML='<input id="ex_name" placeholder="સાધનનું નામ" value="'+(item?item.name:"")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><input id="ex_icon" placeholder="આયકન 🔬" value="'+(item?item.icon:"🔬")+'" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/><label style="font-size:12px;color:var(--text2)">પરિચય (5 લીટી)</label><textarea id="ex_use" rows="5" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit">'+(item?item.use:"")+'</textarea>';}
+openModal("extraModal");}
+function saveExtraItem(){var kind=window._extraKind,idx=window._extraIdx;var k=kind==="inst"?"instruments":kind;var item=null;
+if(kind==="ukhana"){var q=document.getElementById("ex_q").value.trim(),a=document.getElementById("ex_a").value.trim();if(!q){alert("ઉખાણું લખો");return;}item={q:q,a:a||"—"};}
+else if(kind==="gk"){var t=document.getElementById("ex_t").value.trim(),f=document.getElementById("ex_f").value.trim();if(!t||!f){alert("ભરો");return;}item={t:t,f:f};}
+else if(kind==="scientists"){var n=document.getElementById("ex_name").value.trim(),ic=document.getElementById("ex_icon").value.trim()||"🔬",er=document.getElementById("ex_era").value.trim(),fi=document.getElementById("ex_field").value.trim(),bio=document.getElementById("ex_bio").value.trim();if(!n||!bio){alert("નામ અને પરિચય");return;}item={name:n,icon:ic,era:er,field:fi,bio:bio};}
+else{var n=document.getElementById("ex_name").value.trim(),ic=document.getElementById("ex_icon").value.trim()||"🔬",u=document.getElementById("ex_use").value.trim();if(!n||!u){alert("નામ અને પરિચય");return;}item={name:n,icon:ic,use:u,tip:""};}
+if(idx>=0)EXTRA[k][idx]=item;else EXTRA[k].push(item);saveExtra();closeModal("extraModal");
+if(kind==="ukhana")renderUkhana();else if(kind==="gk")renderGK();else if(kind==="scientists")renderScientists();else renderInstruments();}
+
+function loadAll(){try{var s=localStorage.getItem(STORE);if(s){var p=JSON.parse(s);Object.keys(p).forEach(function(k){if(data[k])data[k]=p[k];});}}catch(e){}try{var sub=localStorage.getItem(SUBS_KEY);if(sub)subjects=JSON.parse(sub);}catch(e){}}
+function saveData(){try{localStorage.setItem(STORE,JSON.stringify(data));}catch(e){}}
+function saveSubjects(){try{localStorage.setItem(SUBS_KEY,JSON.stringify(subjects));}catch(e){}}
+function closeModal(id){document.getElementById(id).classList.add("hidden");}
+function openModal(id){document.getElementById(id).classList.remove("hidden");}
+function showTip(){document.getElementById("tipBox").innerHTML="💡 <b>ટિપ:</b> "+TIPS[Math.floor(Math.random()*TIPS.length)];}
+function openChapter(key,ci){viewKey=key;viewCi=ci;qFilter="all";document.getElementById("mainView").classList.add("hidden");document.getElementById("chapterView").classList.remove("hidden");window.scrollTo(0,0);renderChapterPage();}
+function goHome(){viewKey=null;viewCi=null;document.getElementById("mainView").classList.remove("hidden");document.getElementById("chapterView").classList.add("hidden");document.title="GSEB TOPPER";renderSubTabs();render();window.scrollTo(0,0);}
+function badgeStyle(t){var m={"MCQ":"background:#dbeafe;color:#1e40af","ખાલી જગ્યા":"background:#d1fae5;color:#065f46","ટૂંકા જવાબ":"background:#ede9fe;color:#5b21b6","તફાવત":"background:#fef3c7;color:#92400e","વૈજ્ઞાનિક કારણ":"background:#ffe4e6;color:#9f1239","HOTS":"background:#fae8ff;color:#86198f","પ્રવૃત્તિ":"background:#cffafe;color:#155e75"};return m[t]||"background:#e0e7ff;color:#3730a3";}
+function getNotes(k,ci){try{var a=JSON.parse(localStorage.getItem(NOTESK)||"{}");return a[k+"-"+ci]||"";}catch(e){return"";}}
+function saveNotes(k,ci,t){try{var a=JSON.parse(localStorage.getItem(NOTESK)||"{}");a[k+"-"+ci]=t;localStorage.setItem(NOTESK,JSON.stringify(a));}catch(e){}}
+function getScores(){try{return JSON.parse(localStorage.getItem(SCORES_KEY)||"{}");}catch(e){return{};}}
+function saveScore(key,ci,score){var s=getScores();s[key+"-"+ci]=score;localStorage.setItem(SCORES_KEY,JSON.stringify(s));}
+function getDashStats(){var scores=getScores(),chaps=0,qs=0,tested=0,totalScore=0,n=0;Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch,ci){chaps++;qs+=(ch.questions||[]).length;var sc=scores[k+"-"+ci];if(sc!==undefined){tested++;totalScore+=sc;n++;}});});return{chaps:chaps,qs:qs,tested:tested,avg:n?Math.round(totalScore/n):0};}
+function renderDash(){var s=getDashStats(),pct=s.chaps?Math.round(s.tested/s.chaps*100):0;document.getElementById("dashBox").innerHTML='<div class="dash-grid"><div class="dash-card"><div class="num">'+s.chaps+'</div><div class="lbl">📚 પ્રકરણ</div></div><div class="dash-card"><div class="num">'+s.qs+'</div><div class="lbl">❓ પ્રશ્નો</div></div><div class="dash-card"><div class="num">'+s.tested+'</div><div class="lbl">✅ Test</div></div><div class="dash-card"><div class="num">'+s.avg+'</div><div class="lbl">🏆 સરેરાશ</div></div></div><div class="card" style="padding:14px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px"><span>પ્રગતિ</span><span>'+pct+'%</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div></div>';}
+function renderChapterPage(){
+if(!viewKey||!data[viewKey]||!data[viewKey].chapters[viewCi]){document.getElementById("chapterContent").innerHTML='<div class="card" style="padding:40px;text-align:center"><p>પ્રકરણ મળ્યું નહીં</p><button onclick="goHome()" class="btn btn-primary" style="margin-top:12px">પાછા</button></div>';return;}
+var ch=data[viewKey].chapters[viewCi],section=data[viewKey];
+document.getElementById("cvTitle").textContent=ch.name;document.getElementById("cvSub").textContent=section.title||"";document.title=ch.name+" | GSEB TOPPER";
+var notes=getNotes(viewKey,viewCi),qs=ch.questions||[],qCount=qs.length,html="",scores=getScores(),lastScore=scores[viewKey+"-"+viewCi];
+var types={};qs.forEach(function(q){types[q.type]=(types[q.type]||0)+1;});
+html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><button class="filter-chip'+(qFilter==="all"?" on":"")+'" onclick="setFilter(\'all\')">બધા ('+qCount+')</button>';
+Object.keys(types).forEach(function(t){html+='<button class="filter-chip'+(qFilter===t?" on":"")+'" onclick="setFilter(\''+t+'\')">'+t+'</button>';});html+='</div>';
+if(lastScore!==undefined)html+='<div style="margin-bottom:12px"><span class="score-pill">🏆 છેલ્લો: '+lastScore+'/25</span></div>';
+if(qCount===0){html+='<div class="empty-chap" style="margin-bottom:18px"><p style="font-size:36px">📝</p><p>હજુ પ્રશ્ન નથી</p><button onclick="openAddToChapter(\''+viewKey+'\','+viewCi+')" class="edit-only btn btn-primary">➕ પ્રશ્ન ઉમેરો</button></div>';}
+else{qs.forEach(function(q,qi){if(qFilter!=="all"&&q.type!==qFilter)return;
+html+='<div class="q-card"><span class="badge" style="'+badgeStyle(q.type)+'">'+q.type+'</span><div style="font-size:14px;white-space:pre-wrap;line-height:1.6;margin-bottom:8px">'+q.text+'</div>';
+html+='<button onclick="this.nextElementSibling.classList.toggle(\'hidden\')" style="font-size:12px;color:var(--success);font-weight:700;background:none;border:none;cursor:pointer;font-family:inherit">🔑 જવાબ જુઓ</button>';
+html+='<div class="answer-box hidden">'+(q.answer||"—")+'</div>';
+html+='<div class="edit-only" style="display:flex;gap:8px;margin-top:10px"><button onclick="editQ(\''+viewKey+'\','+viewCi+','+qi+')" class="btn btn-amber btn-sm">✏️</button><button onclick="delQ(\''+viewKey+'\','+viewCi+','+qi+')" class="btn btn-red btn-sm">🗑️</button></div></div>';});
+html+='<button onclick="openAddToChapter(\''+viewKey+'\','+viewCi+')" class="edit-only btn btn-primary" style="width:100%;padding:12px;margin:12px 0;justify-content:center">➕ પ્રશ્ન ઉમેરો</button>';}
+html+='<div class="card" style="padding:16px;margin-bottom:18px;background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(251,191,36,.04));border-color:rgba(245,158,11,.2)"><h4 style="font-size:13px;font-weight:700;color:var(--warning);margin-bottom:8px">📌 Notes</h4>';
+html+='<div id="nv-'+viewKey+'-'+viewCi+'" style="font-size:13px">'+(notes||"નોંધ નથી")+'</div>';
+html+='<textarea id="ne-'+viewKey+'-'+viewCi+'" class="edit-only hidden" style="width:100%;border:1.5px solid var(--border);border-radius:12px;padding:10px;font-size:13px;margin-top:8px;background:var(--input-bg);color:var(--text);font-family:inherit" rows="2">'+notes+'</textarea>';
+html+='<button onclick="editNotes(\''+viewKey+'\','+viewCi+')" class="edit-only btn btn-amber btn-sm" style="margin-top:8px">✏️ Notes</button>';
+html+='<button id="ns-'+viewKey+'-'+viewCi+'" onclick="saveNotesUI(\''+viewKey+'\','+viewCi+')" class="edit-only btn btn-green btn-sm hidden" style="margin-top:8px">💾</button></div>';
+html+='<div class="test-banner"><h4 style="font-size:18px;font-weight:800;margin-bottom:4px">📝 25 Marks Test</h4><p style="font-size:12px;opacity:.85;margin-bottom:14px">સાચા જવાબે 🎉 confetti!</p>';
+html+='<button onclick="startTest(\''+viewKey+'\','+viewCi+')" class="btn" style="background:#fff;color:#4f46e5;font-weight:800;padding:12px 28px">Test શરૂ →</button></div>';
+html+='<div class="edit-only" style="text-align:center;margin-bottom:36px"><button onclick="openChapEdit(\''+viewKey+'\','+viewCi+')" class="btn btn-amber">✏️ પ્રકરણ નામ</button></div>';
+document.getElementById("chapterContent").innerHTML=html;}
+function setFilter(f){qFilter=f;renderChapterPage();}
+document.getElementById("mainHeader").addEventListener("click",function(e){if(e.target.closest("button"))return;if(isUnlocked)return;clickCount++;if(clickCount>=CLICKS){clickCount=0;openModal("passModal");document.getElementById("passInput").value="";document.getElementById("passError").classList.add("hidden");}});
+
+function lockEdit(){
+  isUnlocked=false;
+  try{sessionStorage.removeItem(UNLOCK);localStorage.removeItem(UNLOCK);}catch(e){}
+  document.getElementById("appBody").classList.add("locked");
+  var b=document.getElementById("statusBadge");
+  if(b){b.textContent="🔒 View Only";b.style.background="rgba(255,255,255,.2)";}
+  var lb=document.getElementById("btnLock");if(lb)lb.classList.add("hidden");
+  ["btnName","btnSub"].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add("hidden");});
+  var info=document.getElementById("infoBanner");
+  if(info)info.innerHTML="પ્રકરણ ક્લિક → પ્રશ્નો. Edit: હેડર <b>5 વાર ટચ</b> + પાસવર્ડ.";
+  clickCount=0;
+  if(viewKey!==null)renderChapterPage();else{renderSubTabs();render();try{enhanceHomeDaily();}catch(e){}}
+}
+function checkPassword(){if(document.getElementById("passInput").value===PASSWORD){isUnlocked=true;sessionStorage.setItem(UNLOCK,"true");applyUnlock();closeModal("passModal");}else document.getElementById("passError").classList.remove("hidden");}
+document.getElementById("passInput").addEventListener("keydown",function(e){if(e.key==="Enter")checkPassword();});
+function applyUnlock(){document.getElementById("appBody").classList.remove("locked");
+var lb=document.getElementById("btnLock");if(lb)lb.classList.remove("hidden");
+var b=document.getElementById("statusBadge");if(b){b.textContent="🔓 Edit Mode";b.style.background="linear-gradient(135deg,#10b981,#059669)";}["btnName","btnSub"].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove("hidden");});document.getElementById("infoBanner").innerHTML="<b>Edit Mode ON!</b>";if(viewKey!==null)renderChapterPage();else{renderSubTabs();render();}}
+/* no auto unlock - password required each time */
+function openNameModal(){if(!isUnlocked)return;document.getElementById("editTitle").value=document.getElementById("siteTitle").textContent;document.getElementById("editSubtitle").value=document.getElementById("siteSubtitle").textContent;document.getElementById("editFooter").value=document.getElementById("footerTitle").textContent;document.getElementById("editFooterSub").value=document.getElementById("footerSub").textContent;openModal("nameModal");}
+function saveNames(){var t=document.getElementById("editTitle").value.trim()||"GSEB TOPPER",s=document.getElementById("editSubtitle").value.trim(),f=document.getElementById("editFooter").value.trim()||"GSEB TOPPER",fs=document.getElementById("editFooterSub").value.trim();document.getElementById("siteTitle").textContent=t;document.getElementById("siteSubtitle").textContent=s;document.getElementById("footerTitle").textContent=f;document.getElementById("footerSub").textContent=fs;localStorage.setItem("gseb_names",JSON.stringify({title:t,subtitle:s,footer:f,footerSub:fs}));closeModal("nameModal");}
+function openAddSubject(){if(!isUnlocked)return;document.getElementById("subStdLabel").textContent=currentStd;document.getElementById("newSubName").value="";document.getElementById("newSubEmoji").value="📚";openModal("subjectModal");}
+function addSubject(){var name=document.getElementById("newSubName").value.trim(),emoji=document.getElementById("newSubEmoji").value.trim()||"📚";if(!name){alert("નામ");return;}var id="c"+Date.now();if(!subjects[currentStd])subjects[currentStd]=[];subjects[currentStd].push({id:id,name:name,emoji:emoji,color:"#6366f1"});data[currentStd+"-"+id]={title:"ધોરણ "+currentStd+" "+name,chapters:[]};saveSubjects();saveData();closeModal("subjectModal");currentSub=id;renderSubTabs();render();}
+function openChapEdit(key,ci){if(!isUnlocked)return;editingChap={key:key,ci:ci};document.getElementById("editChapName").value=data[key].chapters[ci].name;openModal("chapModal");}
+function saveChapName(){if(!editingChap)return;var name=document.getElementById("editChapName").value.trim();if(!name){alert("નામ");return;}data[editingChap.key].chapters[editingChap.ci].name=name;saveData();closeModal("chapModal");editingChap=null;if(viewKey!==null)renderChapterPage();else render();}
+function openAddToChapter(key,ci){if(!isUnlocked){alert("Edit: હેડર 5 વાર ટચ");return;}editingIndex=null;targetChapterIndex={key:key,ci:ci};document.getElementById("modalTitle").textContent="➕ પ્રશ્ન";document.getElementById("newChap").value=data[key].chapters[ci].name;document.getElementById("newText").value="";document.getElementById("newAnswer").value="";document.getElementById("newType").value="MCQ";openModal("addModal");}
+function saveQuestion(){if(!isUnlocked)return;var type=document.getElementById("newType").value,text=document.getElementById("newText").value.trim(),ans=document.getElementById("newAnswer").value.trim();if(!text){alert("પ્રશ્ન લખો");return;}if(editingIndex){data[editingIndex.key].chapters[editingIndex.ci].questions[editingIndex.qi]={type:type,text:text,answer:ans};}else if(targetChapterIndex){if(!data[targetChapterIndex.key].chapters[targetChapterIndex.ci].questions)data[targetChapterIndex.key].chapters[targetChapterIndex.ci].questions=[];data[targetChapterIndex.key].chapters[targetChapterIndex.ci].questions.push({type:type,text:text,answer:ans});}saveData();closeModal("addModal");editingIndex=null;targetChapterIndex=null;if(viewKey!==null)renderChapterPage();else render();}
+function editQ(k,ci,qi){if(!isUnlocked)return;editingIndex={key:k,ci:ci,qi:qi};targetChapterIndex=null;var q=data[k].chapters[ci].questions[qi];document.getElementById("modalTitle").textContent="✏️ એડિટ";document.getElementById("newChap").value=data[k].chapters[ci].name;document.getElementById("newType").value=q.type;document.getElementById("newText").value=q.text;document.getElementById("newAnswer").value=q.answer||"";openModal("addModal");}
+function delQ(k,ci,qi){if(!isUnlocked)return;if(confirm("કાઢી નાખવો?")){data[k].chapters[ci].questions.splice(qi,1);saveData();if(viewKey!==null)renderChapterPage();else render();}}
+function delChapter(k,ci){if(!isUnlocked)return;if(confirm("પ્રકરણ કાઢી નાખવું?")){data[k].chapters.splice(ci,1);saveData();if(viewKey!==null)goHome();else render();}}
+function addChapter(){if(!isUnlocked)return;var key=currentStd+"-"+currentSub;if(!data[key])data[key]={title:"નવું",chapters:[]};data[key].chapters.push({name:(data[key].chapters.length+1)+". નવું પ્રકરણ",notes:"",questions:[]});saveData();render();}
+function generate25(qs,name){var pool=(qs||[]).slice();while(pool.length<25){var b=(qs&&qs[pool.length%Math.max(qs.length,1)])||{type:"MCQ",text:name+" પ્રશ્ન",answer:"—"};pool.push({type:b.type,text:b.text+" (Q"+(pool.length+1)+")",answer:b.answer||"—"});}for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}return pool.slice(0,25).map(function(q){return{type:q.type,text:q.text,answer:q.answer,checked:false,options:q.type==="MCQ"?shuffle([q.answer||"સાચો","A","B","C"]):null};});}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function startTest(key,ci){var ch=data[key].chapters[ci];currentTest={key:key,ci:ci,questions:generate25(ch.questions,ch.name),userAnswers:new Array(25).fill(null),submitted:false};document.getElementById("testTitle").textContent="📝 25 Marks – "+ch.name;document.getElementById("testResult").classList.add("hidden");document.getElementById("testBody").classList.remove("hidden");document.getElementById("testActions").classList.remove("hidden");document.getElementById("submitBtn").classList.remove("hidden");document.getElementById("liveScore").textContent="";renderTest();openModal("testModal");}
+function renderTest(){var html="",live=0;currentTest.questions.forEach(function(q,i){var ua=currentTest.userAnswers[i],isChecked=q.checked,isCorrect=false;if(ua&&q.answer){var a=ua.toString().trim().toLowerCase(),c=q.answer.toString().trim().toLowerCase();isCorrect=(a===c||c.indexOf(a)>=0);if(isCorrect)live++;}
+html+='<div style="margin-bottom:16px;padding:14px;border:1.5px solid var(--border);border-radius:16px;background:var(--surface2)"><div style="margin-bottom:8px"><b style="color:var(--primary)">Q'+(i+1)+'.</b> <span class="badge" style="'+badgeStyle(q.type)+';margin:0">'+q.type+'</span></div><p style="font-size:13px;white-space:pre-wrap;margin-bottom:10px">'+q.text+'</p>';
+if(q.options){q.options.forEach(function(opt){var cls="test-option";if(ua===opt){cls+=" selected";if(isChecked)cls+=isCorrect?" correct":" wrong";}else if(isChecked&&opt===q.answer)cls+=" correct";
+html+='<div class="'+cls+'" onclick="selectOpt('+i+','+JSON.stringify(opt)+')">'+opt+'</div>';});}
+else{html+='<textarea rows="2" style="width:100%;border:1.5px solid var(--border);border-radius:12px;padding:10px;font-size:13px;background:var(--input-bg);color:var(--text);font-family:inherit" '+(isChecked?"readonly":"")+' onchange="textAnswer('+i+',this.value)">'+(ua||"")+'</textarea>';if(!isChecked)html+='<button onclick="checkText('+i+')" class="btn btn-sm btn-primary" style="margin-top:8px">ચકાસો</button>';}
+if(isChecked)html+='<div class="'+(isCorrect?"fb-correct":"fb-wrong")+'">'+(isCorrect?"✅ સાચું! +1":"❌ ખોટું — સાચો: "+q.answer)+'</div>';html+='</div>';});
+document.getElementById("testBody").innerHTML=html;document.getElementById("testProgress").textContent="25 પ્રશ્નો";document.getElementById("liveScore").textContent="✅ સાચા: "+live+"/25";}
+function selectOpt(i,opt){if(currentTest.submitted||currentTest.questions[i].checked)return;currentTest.userAnswers[i]=opt;currentTest.questions[i].checked=true;var q=currentTest.questions[i],a=String(opt).trim().toLowerCase(),c=String(q.answer||"").trim().toLowerCase();if(a===c||c.indexOf(a)>=0)fireMini();renderTest();}
+function textAnswer(i,val){if(!currentTest.questions[i].checked)currentTest.userAnswers[i]=val;}
+function checkText(i){if(currentTest.submitted||currentTest.questions[i].checked)return;var ua=String(currentTest.userAnswers[i]||"").trim();if(!ua){alert("જવાબ લખો");return;}currentTest.questions[i].checked=true;var q=currentTest.questions[i];if(ua.toLowerCase()===String(q.answer||"").toLowerCase()||String(q.answer||"").toLowerCase().indexOf(ua.toLowerCase())>=0)fireMini();renderTest();}
+function submitTest(){if(!currentTest||currentTest.submitted)return;currentTest.submitted=true;currentTest.questions.forEach(function(q){q.checked=true;});var score=0;currentTest.questions.forEach(function(q,i){var ua=String(currentTest.userAnswers[i]||"").trim().toLowerCase(),ca=String(q.answer||"").trim().toLowerCase();if(ua&&(ua===ca||ca.indexOf(ua)>=0))score++;});saveScore(currentTest.key,currentTest.ci,score);document.getElementById("testBody").classList.add("hidden");document.getElementById("submitBtn").classList.add("hidden");document.getElementById("liveScore").textContent="";var res=document.getElementById("testResult");res.classList.remove("hidden");var msg=score>=22?"ઉત્તમ! 🌟":score>=18?"સારું! 👍":score>=12?"સારું":"ફરી અભ્યાસ";if(score>=15)fireBig();res.innerHTML='<div style="font-size:56px">'+(score>=18?"🎉":"📚")+'</div><h3 style="font-size:36px;font-weight:800;color:'+(score>=18?"var(--success)":"var(--warning)")+'">'+score+'/25</h3><p style="margin:10px 0 18px">'+msg+'</p><button onclick="startTest(currentTest.key,currentTest.ci)" class="btn btn-primary">ફરી</button>';}
+function closeTest(){closeModal("testModal");currentTest=null;if(viewKey!==null)renderChapterPage();}
+function renderSubTabs(){
+var list=subjects[currentStd]||[],html="";
+list.forEach(function(s){
+  var a=s.id===currentSub;
+  html+='<button class="sub-pill'+(a?' active':'')+'" style="'+(a?'background:'+s.color:'')+'" data-sub="'+s.id+'">'+s.emoji+' '+s.name+'</button>';
+});
+var extras=[["mat","📚 Material","#0ea5e9"],["key","🔑 Key","#22c55e"],["ukh","🧩 ઉખાણા","#f59e0b"],["gk","🌍 જી.કે.","#06b6d4"],["scientists","👨‍🔬 વૈજ્ઞાનિક","#a855f7"],["inst","🔭 સાધનો","#ef4444"],["formula","📐 સૂત્રો","#6366f1"],["gloss","📖 શબ્દકોશ","#0d9488"],["quiz","⚡ Quick Quiz","#e11d48"],["exam","📝 સ્વ-પરીક્ષા","#7c3aed"],["badges","🏅 બેજ","#d97706"],["report","👨‍👩‍👧 રિપોર્ટ","#0284c7"],["vs","⚔️ સહપાઠી","#be185d"],["progress","📊 પ્રગતિ","#15803d"]];
+extras.forEach(function(e){
+  var a=currentSub===e[0];
+  html+='<button class="sub-pill'+(a?' active':'')+'" style="'+(a?'background:'+e[2]:'')+'" data-sub="'+e[0]+'">'+e[1]+'</button>';
+});
+document.getElementById("subTabs").innerHTML=html;
+document.getElementById("subTabs").onclick=function(ev){
+  var btn=ev.target.closest("[data-sub]");
+  if(btn) switchSub(btn.getAttribute("data-sub"));
+};
+}
+function switchSub(id){currentSub=id;renderSubTabs();render();}
+function render(){if(currentSub==="ukh"){renderUkhana();return;}if(currentSub==="gk"){renderGK();return;}if(currentSub==="scientists"){renderScientists();return;}if(currentSub==="inst"){renderInstruments();return;}if(currentSub==="formula"){renderFormulas();return;}if(currentSub==="gloss"){renderGlossary();return;}if(currentSub==="quiz"){renderQuickQuiz();return;}if(currentSub==="exam"){renderExamMode();return;}if(currentSub==="badges"){renderBadges();return;}if(currentSub==="report"){renderReport();return;}if(currentSub==="vs"){renderVS();return;}if(currentSub==="progress"){renderProgress();return;}if(currentSub==="key"){renderKey();return;}if(currentSub==="mat"){renderMaterial();return;}renderDash();
+var key=currentStd+"-"+currentSub,section=data[key]||{title:"નવું",chapters:[]},scores=getScores();
+var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h2 style="font-size:20px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+(section.title||"")+'</h2><button onclick="addChapter()" class="edit-only btn btn-teal btn-sm">➕ પ્રકરણ</button></div>';
+html+='<p style="font-size:13px;color:var(--text2);margin-bottom:12px">GSEB 2026-27 અભ્યાસક્રમ • '+(section.chapters||[]).length+' પ્રકરણ</p>';
+(section.chapters||[]).forEach(function(ch,ci){var qc=(ch.questions||[]).length,sc=scores[key+"-"+ci];
+html+='<div class="card chap-card" onclick="openChapter(\''+key+'\','+ci+')"><div class="num-badge">'+(ci+1)+'</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+ch.name+'</div><div style="font-size:11px;color:var(--text2);margin-top:2px">'+qc+' પ્રશ્નો'+(sc!==undefined?' • <span style="color:var(--success);font-weight:600">🏆 '+sc+'/25</span>':'')+'</div></div><div style="display:flex;gap:6px;align-items:center"><button onclick="event.stopPropagation();openChapEdit(\''+key+'\','+ci+')" class="edit-only btn btn-amber btn-sm">✏️</button><button onclick="event.stopPropagation();delChapter(\''+key+'\','+ci+')" class="edit-only btn btn-red btn-sm">🗑️</button><span style="color:var(--primary);font-size:22px">›</span></div></div>';});
+if(!(section.chapters||[]).length)html+='<div class="card" style="padding:40px;text-align:center;color:var(--text2)"><p style="font-size:40px">📭</p><p>કોઈ પ્રકરણ નથી</p></div>';
+document.getElementById("dynamicArea").innerHTML=html;}
+function renderMaterial(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#0ea5e9;margin-bottom:6px">📚 Study Material</h2><p style="font-size:13px;color:var(--text2);margin-bottom:16px">ધોરણ '+currentStd+'</p>';
+(subjects[currentStd]||[]).forEach(function(sub){var k=currentStd+"-"+sub.id,mats=MATERIALS[k]||[];html+='<h3 style="font-size:15px;font-weight:700;margin:16px 0 10px">'+sub.emoji+" "+sub.name+"</h3>";mats.forEach(function(m){html+='<div class="mat-card"><h4>📌 '+m.t+'</h4><ul>';m.items.forEach(function(it){html+='<li>'+it+'</li>';});html+='</ul></div>';});});
+document.getElementById("dynamicArea").innerHTML=html;}
+function renderKey(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:var(--success);margin-bottom:16px">🔑 Answer Key – ધોરણ '+currentStd+'</h2>';
+(subjects[currentStd]||[]).forEach(function(sub){var k=currentStd+"-"+sub.id,sec=data[k];if(!sec)return;html+='<h3 style="font-size:15px;font-weight:700;color:var(--primary);margin:16px 0 8px">'+sub.emoji+" "+(sec.title||sub.name)+"</h3>";
+(sec.chapters||[]).forEach(function(ch){html+='<div class="card" style="padding:14px;margin-bottom:10px"><b style="font-size:13px">'+ch.name+'</b><ol style="margin:10px 0 0 18px;font-size:13px">';(ch.questions||[]).forEach(function(q){html+='<li style="margin-bottom:8px"><span style="color:var(--text2)">'+q.text.substring(0,40)+'...</span><div class="answer-box">'+(q.answer||"—")+'</div></li>';});html+='</ol></div>';});});
+document.getElementById("dynamicArea").innerHTML=html;}
+function editNotes(k,ci){document.getElementById("nv-"+k+"-"+ci).classList.add("hidden");document.getElementById("ne-"+k+"-"+ci).classList.remove("hidden");document.getElementById("ns-"+k+"-"+ci).classList.remove("hidden");}
+function saveNotesUI(k,ci){var t=document.getElementById("ne-"+k+"-"+ci).value;saveNotes(k,ci,t);document.getElementById("nv-"+k+"-"+ci).textContent=t||"નોંધ નથી";document.getElementById("nv-"+k+"-"+ci).classList.remove("hidden");document.getElementById("ne-"+k+"-"+ci).classList.add("hidden");document.getElementById("ns-"+k+"-"+ci).classList.add("hidden");}
+document.querySelectorAll(".std-tab").forEach(function(t){t.onclick=function(){document.querySelectorAll(".std-tab").forEach(function(x){x.classList.remove("active");});t.classList.add("active");currentStd=t.getAttribute("data-std");var list=subjects[currentStd]||[];currentSub=list.length?list[0].id:"key";renderSubTabs();render();};});
+
+function getBadges(){try{return JSON.parse(localStorage.getItem(BADGES_KEY)||"{}");}catch(e){return{};}}
+function setBadge(id){var b=getBadges();if(!b[id]){b[id]=Date.now();localStorage.setItem(BADGES_KEY,JSON.stringify(b));return true;}return false;}
+function checkBadges(){var scores=getScores(),n=Object.keys(scores).length,max=0,sum=0;Object.keys(scores).forEach(function(k){sum+=scores[k];if(scores[k]>max)max=scores[k];});
+if(n>=1)setBadge("first_test");if(n>=5)setBadge("tests_5");if(n>=10)setBadge("tests_10");if(max>=20)setBadge("score_20");if(max>=25)setBadge("score_25");
+if(EXTRA.ukhana&&EXTRA.ukhana.length>=40)setBadge("ukhana_fan");}
+function loadFormulas(){try{var s=localStorage.getItem(FORMULAS_KEY);if(s)FORMULAS=JSON.parse(s);}catch(e){}}
+function saveFormulas(){try{localStorage.setItem(FORMULAS_KEY,JSON.stringify(FORMULAS));}catch(e){}}
+function loadGlossary(){try{var s=localStorage.getItem(GLOSSARY_KEY);if(s)GLOSSARY=JSON.parse(s);}catch(e){}}
+function saveGlossary(){try{localStorage.setItem(GLOSSARY_KEY,JSON.stringify(GLOSSARY));}catch(e){}}
+
+function renderDailyHome(){/* injected into main render via tip */}
+function getDailyIndex(arr){var d=new Date();var seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();return arr.length?seed%arr.length:0;}
+
+function renderFormulas(){
+document.getElementById("dashBox").innerHTML="";
+var html='<h2 style="font-size:20px;font-weight:800;color:#6366f1;margin-bottom:6px">📐 મહત્વના સૂત્રો</h2><p style="font-size:13px;color:var(--text2);margin-bottom:12px">ધોરણ '+currentStd+'</p>';
+html+='<button id="btnAddFormula" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ સૂત્ર ઉમેરો</button>';
+(subjects[currentStd]||[]).forEach(function(sub){
+  var k=currentStd+"-"+sub.id; var list=FORMULAS[k]||[];
+  html+='<h3 style="font-size:14px;font-weight:700;margin:14px 0 8px">'+sub.emoji+" "+sub.name+"</h3>";
+  if(!list.length) html+='<p style="font-size:12px;color:var(--text2)">સૂત્રો નથી</p>';
+  list.forEach(function(f,i){
+    html+='<div class="formula-card" data-k="'+k+'" data-i="'+i+'"><h4>'+f.t+'</h4><div style="font-size:14px;font-weight:600">'+f.f+'</div>';
+    html+='<div class="edit-only" style="margin-top:8px;display:flex;gap:6px"><button class="btn btn-amber btn-sm btn-ef">✏️</button><button class="btn btn-red btn-sm btn-df">🗑️</button></div></div>';
+  });
+});
+document.getElementById("dynamicArea").innerHTML=html;
+var baf=document.getElementById("btnAddFormula"); if(baf) baf.onclick=addFormula;
+document.getElementById("dynamicArea").querySelectorAll(".btn-ef").forEach(function(btn){
+  btn.onclick=function(){var c=btn.closest("[data-k]"); editFormula(c.getAttribute("data-k"), parseInt(c.getAttribute("data-i"),10));};
+});
+document.getElementById("dynamicArea").querySelectorAll(".btn-df").forEach(function(btn){
+  btn.onclick=function(){var c=btn.closest("[data-k]"); delFormula(c.getAttribute("data-k"), parseInt(c.getAttribute("data-i"),10));};
+});
+}
+
+function addFormula(){if(!isUnlocked)return;var sub=(subjects[currentStd]||[])[0];if(!sub)return;var k=currentStd+"-"+sub.id;var t=prompt("સૂત્રનું નામ:");if(!t)return;var f=prompt("સૂત્ર:");if(!f)return;if(!FORMULAS[k])FORMULAS[k]=[];FORMULAS[k].push({t:t,f:f});saveFormulas();renderFormulas();}
+function editFormula(k,i){if(!isUnlocked)return;var t=prompt("નામ:",FORMULAS[k][i].t);if(t===null)return;var f=prompt("સૂત્ર:",FORMULAS[k][i].f);if(f===null)return;FORMULAS[k][i]={t:t,f:f};saveFormulas();renderFormulas();}
+function delFormula(k,i){if(!isUnlocked)return;if(confirm("કાઢી નાખવું?")){FORMULAS[k].splice(i,1);saveFormulas();renderFormulas();}}
+
+function renderGlossary(){document.getElementById("dashBox").innerHTML="";var html='<h2 style="font-size:20px;font-weight:800;color:#0d9488;margin-bottom:6px">📖 શબ્દકોશ</h2><p style="font-size:13px;color:var(--text2);margin-bottom:12px">'+GLOSSARY.length+' શબ્દો • વિજ્ઞાન + ગણિત</p>';
+html+='<button onclick="addGloss()" class="edit-only btn btn-primary btn-sm" style="margin-bottom:12px">➕ શબ્દ ઉમેરો</button>';
+html+='<input id="glossSearch" placeholder="શોધો..." oninput="filterGloss(this.value)" style="width:100%;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:12px"/>';
+html+='<div id="glossList">';GLOSSARY.forEach(function(g,i){html+='<div class="glossary-item" data-w="'+g.w+'"><b>'+g.w+'</b> — <span style="color:var(--text2)">'+g.m+'</span>';
+html+='<div class="edit-only" style="margin-top:6px"><button class="btn btn-amber btn-sm" onclick="editGloss('+i+')">✏️</button> <button class="btn btn-red btn-sm" onclick="delGloss('+i+')">🗑️</button></div></div>';});html+='</div>';
+document.getElementById("dynamicArea").innerHTML=html;}
+function filterGloss(q){q=(q||"").toLowerCase();document.querySelectorAll(".glossary-item").forEach(function(el){el.style.display=!q||el.getAttribute("data-w").toLowerCase().indexOf(q)>=0?"":"none";});}
+function addGloss(){if(!isUnlocked)return;var w=prompt("શબ્દ:");if(!w)return;var m=prompt("અર્થ:");if(!m)return;GLOSSARY.push({w:w,m:m});saveGlossary();renderGlossary();}
+function editGloss(i){if(!isUnlocked)return;var w=prompt("શબ્દ:",GLOSSARY[i].w);if(w===null)return;var m=prompt("અર્થ:",GLOSSARY[i].m);if(m===null)return;GLOSSARY[i]={w:w,m:m};saveGlossary();renderGlossary();}
+function delGloss(i){if(!isUnlocked)return;if(confirm("કાઢી નાખવું?")){GLOSSARY.splice(i,1);saveGlossary();renderGlossary();}}
+
+var quickQuiz=null;
+function renderQuickQuiz(){document.getElementById("dashBox").innerHTML="";
+if(!quickQuiz){var html='<h2 style="font-size:20px;font-weight:800;color:#e11d48;margin-bottom:8px">⚡ રોજનું Quick Quiz</h2><p style="font-size:13px;color:var(--text2);margin-bottom:16px">5 પ્રશ્નો • ધોરણ '+currentStd+' • ઝડપી રિવિઝન</p>';
+html+='<button onclick="startQuickQuiz()" class="btn btn-primary" style="padding:14px 28px;font-size:15px">🚀 Quiz શરૂ કરો</button>';
+document.getElementById("dynamicArea").innerHTML=html;return;}
+var q=quickQuiz.qs[quickQuiz.i],html='<div style="font-size:12px;color:var(--text2);margin-bottom:8px">પ્રશ્ન '+(quickQuiz.i+1)+'/5 • સાચા: '+quickQuiz.score+'</div>';
+html+='<div class="quiz-q">'+q.text+'</div>';
+if(q.options){q.options.forEach(function(o){html+='<div class="test-option" onclick="answerQuick('+JSON.stringify(String(o))+')">'+o+'</div>';});}
+else{html+='<textarea id="qqAns" rows="2" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit"></textarea>';
+html+='<button onclick="answerQuick(document.getElementById(\'qqAns\').value)" class="btn btn-primary" style="margin-top:10px">જવાબ આપો</button>';}
+if(quickQuiz.feedback)html+='<div class="'+(quickQuiz.feedback.ok?"fb-correct":"fb-wrong")+'">'+quickQuiz.feedback.msg+'</div>';
+document.getElementById("dynamicArea").innerHTML=html;}
+function startQuickQuiz(){var pool=[];Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch){(ch.questions||[]).forEach(function(q){pool.push(q);});});});
+if(pool.length<3){alert("પૂરતા પ્રશ્નો નથી");return;}for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}
+var qs=pool.slice(0,5).map(function(q){return{type:q.type,text:q.text,answer:q.answer,options:q.type==="MCQ"?shuffle([q.answer||"સાચો","A","B","C"]):null};});
+quickQuiz={qs:qs,i:0,score:0,feedback:null};renderQuickQuiz();}
+function answerQuick(ans){if(!quickQuiz||quickQuiz.feedback)return;var q=quickQuiz.qs[quickQuiz.i];var a=String(ans||"").trim().toLowerCase(),c=String(q.answer||"").trim().toLowerCase();var ok=a&&(a===c||c.indexOf(a)>=0);
+if(ok){quickQuiz.score++;fireMini();}quickQuiz.feedback={ok:ok,msg:ok?"✅ સાચું!":"❌ સાચો જવાબ: "+q.answer};renderQuickQuiz();
+setTimeout(function(){quickQuiz.feedback=null;quickQuiz.i++;if(quickQuiz.i>=5){checkBadges();var sc=quickQuiz.score;quickQuiz=null;document.getElementById("dynamicArea").innerHTML='<div style="text-align:center;padding:30px"><div style="font-size:48px">'+(sc>=4?"🎉":"👍")+'</div><h3 style="font-size:28px;font-weight:800;margin:12px 0">'+sc+'/5</h3><button onclick="startQuickQuiz()" class="btn btn-primary">ફરી</button> <button onclick="switchSub("quiz")" class="btn" style="background:var(--surface2);color:var(--text)">બંધ</button></div>';}else renderQuickQuiz();},900);}
+
+var examState=null,examTimer=null;
+function renderExamMode(){document.getElementById("dashBox").innerHTML="";
+if(!examState){var html='<h2 style="font-size:20px;font-weight:800;color:#7c3aed;margin-bottom:8px">📝 સ્વ-પરીક્ષા મોડ</h2><p style="font-size:13px;color:var(--text2);margin-bottom:12px">10 પ્રશ્નો • 10 મિનિટ • એક પ્રશ્ન એક સ્ક્રીન</p>';
+html+='<button onclick="startExam()" class="btn btn-primary" style="padding:14px 28px">પરીક્ષા શરૂ</button>';
+document.getElementById("dynamicArea").innerHTML=html;return;}
+var left=Math.max(0,examState.end-Date.now()),mins=Math.floor(left/60000),secs=Math.floor((left%60000)/1000);
+var pct=Math.max(0,left/(10*60*1000)*100);
+var q=examState.qs[examState.i];
+var html='<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>Q '+(examState.i+1)+'/10</span><span style="color:'+(left<60000?"var(--danger)":"var(--text)")+'">⏱ '+mins+':'+String(secs).padStart(2,"0")+'</span></div>';
+html+='<div class="timer-bar"><div class="timer-fill" style="width:'+pct+'%"></div></div>';
+html+='<div class="quiz-q">'+q.text+'</div>';
+if(q.options){q.options.forEach(function(o){var sel=examState.ans[examState.i]===o;html+='<div class="test-option'+(sel?" selected":"")+'" onclick="examPick('+JSON.stringify(String(o))+')">'+o+'</div>';});}
+else{html+='<textarea id="exAns" rows="2" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit" onchange="examState.ans[examState.i]=this.value">'+(examState.ans[examState.i]||"")+'</textarea>';}
+html+='<div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between">';
+html+='<button onclick="examNav(-1)" class="btn" style="background:var(--surface2);color:var(--text)" '+(examState.i===0?"disabled":"")+'>← પાછળ</button>';
+if(examState.i<9)html+='<button onclick="examNav(1)" class="btn btn-primary">આગળ →</button>';
+else html+='<button onclick="finishExam()" class="btn btn-green">સબમિટ</button>';
+html+='</div>';document.getElementById("dynamicArea").innerHTML=html;}
+function startExam(){var pool=[];Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch){(ch.questions||[]).forEach(function(q){pool.push(q);});});});
+if(pool.length<5){alert("પૂરતા પ્રશ્નો નથી");return;}for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}
+var qs=pool.slice(0,10).map(function(q){return{text:q.text,answer:q.answer,type:q.type,options:q.type==="MCQ"?shuffle([q.answer||"સાચો","A","B","C"]):null};});
+examState={qs:qs,i:0,ans:new Array(10).fill(null),end:Date.now()+10*60*1000};if(examTimer)clearInterval(examTimer);examTimer=setInterval(function(){if(!examState){clearInterval(examTimer);return;}if(Date.now()>=examState.end){finishExam();return;}if(currentSub==="exam")renderExamMode();},1000);renderExamMode();}
+function examPick(o){examState.ans[examState.i]=o;renderExamMode();}
+function examNav(d){examState.i=Math.max(0,Math.min(9,examState.i+d));renderExamMode();}
+function finishExam(){if(examTimer)clearInterval(examTimer);examTimer=null;if(!examState)return;var sc=0;examState.qs.forEach(function(q,i){var a=String(examState.ans[i]||"").trim().toLowerCase(),c=String(q.answer||"").trim().toLowerCase();if(a&&(a===c||c.indexOf(a)>=0))sc++;});
+checkBadges();var msg='<div style="text-align:center;padding:30px"><div style="font-size:48px">'+(sc>=8?"🏆":sc>=5?"👍":"📚")+'</div><h3 style="font-size:28px;font-weight:800">'+sc+'/10</h3><p style="margin:10px 0;color:var(--text2)">'+(sc>=8?"ઉત્તમ!":sc>=5?"સારું":"વધુ અભ્યાસ")+'</p><button onclick="examState=null;startExam()" class="btn btn-primary">ફરી</button></div>';
+examState=null;document.getElementById("dynamicArea").innerHTML=msg;}
+
+function renderBadges(){checkBadges();document.getElementById("dashBox").innerHTML="";var b=getBadges();
+var all=[["first_test","🌱 પહેલો ટેસ્ટ","1 ટેસ્ટ પૂર્ણ"],["tests_5","🔥 5 ટેસ્ટ","5 પ્રકરણ ટેસ્ટ"],["tests_10","⭐ 10 ટેસ્ટ","10 ટેસ્ટ પૂર્ણ"],["score_20","💎 20+ ગુણ","કોઈ ટેસ્ટમાં 20+"],["score_25","🏆 પરફેક્ટ 25","પૂર્ણ 25/25"],["ukhana_fan","🧩 ઉખાણા પ્રેમી","ઉખાણા સંગ્રહ"]];
+var html='<h2 style="font-size:20px;font-weight:800;color:#d97706;margin-bottom:8px">🏅 બેજ / સ્ટાર</h2><p style="font-size:13px;color:var(--text2);margin-bottom:14px">પ્રગતિ સાથે મળે છે</p><div style="display:flex;flex-wrap:wrap;gap:8px">';
+all.forEach(function(x){var on=!!b[x[0]];html+='<div class="badge-earned'+(on?" on":"")+'" style="opacity:'+(on?"1":".45")+'"><span style="font-size:20px">'+(on?"✅":"🔒")+'</span><div><div>'+x[1]+'</div><div style="font-size:10px;color:var(--text2)">'+x[2]+'</div></div></div>';});
+html+='</div>';document.getElementById("dynamicArea").innerHTML=html;}
+
+function renderReport(){document.getElementById("dashBox").innerHTML="";var scores=getScores(),lines=[],total=0,n=0;
+lines.push("📋 GSEB TOPPER — માતા-પિતા રિપોર્ટ");lines.push("તારીખ: "+new Date().toLocaleDateString("gu-IN"));lines.push("ધોરણ: "+currentStd);lines.push("");
+Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch,ci){var sc=scores[k+"-"+ci];if(sc!==undefined){lines.push("• "+ch.name+": "+sc+"/25");total+=sc;n++;}});});
+if(!n)lines.push("હજુ કોઈ ટેસ્ટ નથી થયો.");else{lines.push("");lines.push("સરેરાશ: "+Math.round(total/n)+"/25");lines.push("કુલ ટેસ્ટ: "+n);}
+lines.push("");lines.push("— GSEB TOPPER એપ");
+var text=lines.join(String.fromCharCode(10));
+var html='<h2 style="font-size:20px;font-weight:800;color:#0284c7;margin-bottom:8px">👨‍👩‍👧 માતા-પિતા રિપોર્ટ</h2><div class="report-box" id="reportText">'+lines.join(String.fromCharCode(10))+'</div>';
+html+='<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button onclick="copyReport()" class="btn btn-primary">📋 કૉપી કરો</button>';
+html+='<button onclick="window.print()" class="btn btn-teal">🖨️ પ્રિન્ટ</button></div>';
+document.getElementById("dynamicArea").innerHTML=html;document.getElementById("reportText").textContent=lines.join(String.fromCharCode(10)).replace(/\\n/g,"\n");
+// fix display
+document.getElementById("reportText").textContent=lines.join(String.fromCharCode(10));}
+function copyReport(){var t=document.getElementById("reportText").textContent;if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){alert("કૉપી થયું!");});else alert(t);}
+
+var vsState=null;
+function renderVS(){document.getElementById("dashBox").innerHTML="";
+if(!vsState){var html='<h2 style="font-size:20px;font-weight:800;color:#be185d;margin-bottom:8px">⚔️ સહપાઠી મોડ</h2><p style="font-size:13px;color:var(--text2);margin-bottom:12px">2 વિદ્યાર્થી • વારાફરતી 5 પ્રશ્નો</p>';
+html+='<input id="p1name" placeholder="વિદ્યાર્થી 1 નું નામ" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:8px"/>';
+html+='<input id="p2name" placeholder="વિદ્યાર્થી 2 નું નામ" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;margin-bottom:12px"/>';
+html+='<button onclick="startVS()" class="btn btn-primary" style="padding:14px 28px">મેચ શરૂ</button>';
+document.getElementById("dynamicArea").innerHTML=html;return;}
+if(vsState.done){var html='<div style="text-align:center;padding:24px"><div class="vs-score">'+vsState.p1+' : '+vsState.s1+' | '+vsState.s2+' : '+vsState.p2+'</div>';
+html+='<p style="margin:16px 0;font-size:18px;font-weight:700">'+(vsState.s1>vsState.s2?"🏆 "+vsState.p1+" જીત્યા!":vsState.s2>vsState.s1?"🏆 "+vsState.p2+" જીત્યા!":"🤝 બરાબર!")+'</p>';
+html+='<button onclick="vsState=null;renderVS()" class="btn btn-primary">ફરી</button></div>';document.getElementById("dynamicArea").innerHTML=html;return;}
+var turn=vsState.turn,name=turn===0?vsState.p1:vsState.p2,q=vsState.qs[vsState.i];
+var html='<div style="text-align:center;margin-bottom:12px;font-weight:700;color:var(--accent)">વાર: '+name+' • Q '+(vsState.i+1)+'/5</div>';
+html+='<div style="display:flex;justify-content:space-around;margin-bottom:12px"><span>'+vsState.p1+': '+vsState.s1+'</span><span>'+vsState.p2+': '+vsState.s2+'</span></div>';
+html+='<div class="quiz-q">'+q.text+'</div>';
+if(q.options){q.options.forEach(function(o){html+='<div class="test-option" onclick="vsAnswer('+JSON.stringify(String(o))+')">'+o+'</div>';});}
+else{html+='<textarea id="vsAns" rows="2" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit"></textarea><button onclick="vsAnswer(document.getElementById(\'vsAns\').value)" class="btn btn-primary" style="margin-top:8px">જવાબ</button>';}
+document.getElementById("dynamicArea").innerHTML=html;}
+function startVS(){var p1=(document.getElementById("p1name").value||"A").trim(),p2=(document.getElementById("p2name").value||"B").trim();
+var pool=[];Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch){(ch.questions||[]).forEach(function(q){pool.push(q);});});});
+if(pool.length<5){alert("પ્રશ્નો ઓછા");return;}for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}
+var qs=pool.slice(0,5).map(function(q){return{text:q.text,answer:q.answer,options:q.type==="MCQ"?shuffle([q.answer||"સાચો","A","B","C"]):null,type:q.type};});
+vsState={p1:p1,p2:p2,s1:0,s2:0,qs:qs,i:0,turn:0,done:false};renderVS();}
+function vsAnswer(ans){if(!vsState||vsState.done)return;var q=vsState.qs[vsState.i];var a=String(ans||"").trim().toLowerCase(),c=String(q.answer||"").trim().toLowerCase();var ok=a&&(a===c||c.indexOf(a)>=0);
+if(ok){if(vsState.turn===0)vsState.s1++;else vsState.s2++;fireMini();}
+vsState.turn=1-vsState.turn;if(vsState.turn===0)vsState.i++;if(vsState.i>=5){vsState.done=true;checkBadges();}renderVS();}
+
+function renderProgress(){document.getElementById("dashBox").innerHTML="";var scores=getScores();
+var html='<h2 style="font-size:20px;font-weight:800;color:#15803d;margin-bottom:8px">📊 મૂલ્યાંકન ટેબલ</h2><p style="font-size:13px;color:var(--text2);margin-bottom:12px">ધોરણ '+currentStd+' — પ્રકરણ મુજબ સ્કોર</p>';
+html+='<div class="card" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="background:var(--surface2)"><th style="padding:10px;text-align:left">પ્રકરણ</th><th style="padding:10px">સ્કોર</th><th style="padding:10px">સ્થિતિ</th></tr>';
+Object.keys(data).forEach(function(k){if(k.indexOf(currentStd+"-")!==0)return;(data[k].chapters||[]).forEach(function(ch,ci){var sc=scores[k+"-"+ci];var st=sc===undefined?"—":sc>=20?"🟢":sc>=12?"🟡":"🔴";
+html+='<tr style="border-top:1px solid var(--border)"><td style="padding:10px">'+ch.name+'</td><td style="padding:10px;text-align:center;font-weight:700">'+(sc!==undefined?sc+"/25":"—")+'</td><td style="padding:10px;text-align:center">'+st+'</td></tr>';});});
+html+='</table></div>';
+html+='<button onclick="window.print()" class="btn btn-teal" style="margin-top:14px">🖨️ પ્રિન્ટ / PDF</button>';
+document.getElementById("dynamicArea").innerHTML=html;}
+
+function enhanceHomeDaily(){
+var tip=document.getElementById("tipBox");
+if(!tip||typeof EXTRA==="undefined"||!EXTRA.ukhana)return;
+var ui=getDailyIndex(EXTRA.ukhana),gi=getDailyIndex(EXTRA.gk);
+var u=EXTRA.ukhana[ui],g=EXTRA.gk[gi];
+tip.innerHTML="";
+var c1=document.createElement("div");c1.className="daily-card";c1.style.borderLeft="4px solid #f59e0b";
+c1.innerHTML='<div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:4px">🧩 આજનું ઉખાણું</div><div style="font-size:13px;line-height:1.5"></div>';
+c1.querySelectorAll("div")[1].textContent=u.q;
+var btn=document.createElement("button");btn.textContent="🔑 જવાબ";btn.style.cssText="font-size:11px;color:var(--success);background:none;border:none;cursor:pointer;margin-top:6px;font-family:inherit";
+var ans=document.createElement("div");ans.className="answer-box hidden";ans.textContent=u.a;ans.style.marginTop="8px";
+btn.onclick=function(){ans.classList.toggle("hidden");};
+c1.appendChild(btn);c1.appendChild(ans);
+var c2=document.createElement("div");c2.className="daily-card";c2.style.borderLeft="4px solid #06b6d4";
+c2.innerHTML='<div style="font-size:11px;font-weight:700;color:#06b6d4;margin-bottom:4px">🌍 આજની હકીકત</div><div style="font-size:13px"></div>';
+c2.querySelectorAll("div")[1].innerHTML="<b>"+g.t+"</b> — ";
+c2.querySelectorAll("div")[1].appendChild(document.createTextNode(g.f));
+tip.appendChild(c1);tip.appendChild(c2);
+}
+
+loadFormulas();loadGlossary();
+loadAll();showTip();renderSubTabs();render();try{enhanceHomeDaily();}catch(e){}document.getElementById("appBody").classList.add("locked");isUnlocked=false;document.documentElement.classList.add("ready");
+</script>
+
+
+<div id="extraModal" class="modal-bg hidden"><div class="modal-box"><h3 id="extraModalTitle" class="modal-title">➕ ઉમેરો</h3>
+<div id="extraFields"></div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px"><button onclick="closeModal('extraModal')" class="btn" style="background:var(--surface2);color:var(--text)">રદ</button><button onclick="saveExtraItem()" class="btn btn-primary">💾 સાચવો</button></div></div></div>
+</body>
+</html>
